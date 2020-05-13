@@ -1,40 +1,5 @@
 //AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4
 
-function barf() {
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query=perth%20australia",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-    }
-  }
-
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-  });
-}
-
-function yap() {
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsedates/v1.0/US/USD/en-US/ADD-sky/LAX-sky/2020-05-14",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-    }
-  }
-
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-  });
-
-}
-
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -118,8 +83,6 @@ function reverseGeocode(antiLat, antiLong) {
   })
 }
 var airportList = [];
-var airportLat;
-var airportLong;
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   $.ajax({
     method: "GET",
@@ -129,21 +92,67 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   })
 }
 
+var searchRequest;
 function geoNamesSuccess(data) {
   console.log(data);
   airportList = data;
-  airportLat = airportList.geonames[0].lat;
-  airportLong = airportList.geonames[0].lng;
-  nearestAirport(airportLat, airportLong);
+  airportInfo(data);
 }
-function nearestAirport(airportLat, airportLong) {
-  $.ajax({
-    method: "GET",
-    url: "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=airport&inputtype=textquery&fields=photos,formatted_address,name,place_id,plus_code&locationbias=point:" + airportLat + ',' + airportLong + '&' + googleAPIKey,
-    success: nearestAirportSuccess,
-    fail: logError
-  })
+function airportInfo(airportList) {
+  searchRequest = airportList.geonames[0].adminName1 + " " + airportList.geonames[0].countryName;
+  searchRequest = searchRequest.trim().replace(/\s/g, '%20');
+  searchRequest = searchRequest.replace(/,/g, '');
+  findAirport(searchRequest)
 }
+
 function nearestAirportSuccess (data) {
   console.log('airport', data);
+}
+var airportName;
+//finds airport from list using adminname and countryname, if no result tries again using only countryname
+function findAirport(searchRequest) {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query="+searchRequest,
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+    }
+  }
+  $.ajax(settings).done(function (data) {
+    console.log('data', data, 'data.length', data.Places.length);
+    if (data.Places.length != 0) {
+      airportName = data.Places[0].PlaceId;
+    }
+    checkEmpty(airportName);
+  });
+}
+
+function checkEmpty(airportName) {
+  if (airportName != undefined) {
+    console.log('airport name', airportName);
+    findFlights(airportName);
+  } else {
+    searchRequest = airportList.geonames[0].countryName;
+    findAirport(searchRequest);
+  }
+}
+
+function findFlights(airportName) {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/2020-12-17",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+    }
+  }
+
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+  });
 }
