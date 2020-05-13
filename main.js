@@ -16,22 +16,6 @@ function logError(error) {
 
 //AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4
 
-var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "https://iatacodes-iatacodes-v1.p.rapidapi.com/api/v5/airports?code=CDG&lang=en&api_key=13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8",
-  "method": "GET",
-  "headers": {
-    "x-rapidapi-host": "iatacodes-iatacodes-v1.p.rapidapi.com",
-    "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-  }
-}
-function code() {
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-  });
-}
-
 function barf() {
   var settings = {
     "async": true,
@@ -66,3 +50,23 @@ function yap() {
   });
 
 }
+
+var options = {
+  types: ['(cities)']
+}
+var input = document.getElementById('city-input');
+var autocomplete = new google.maps.places.Autocomplete(input, options);
+
+
+
+function cityGeocode(city) {
+  $.ajax ({
+    url: 'https://maps.googleapis.com/maps/api/geocode/xml?address='+city+'&key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4',
+    method: "GET",
+    success: logSuccess,
+    fail: logError
+  })
+}
+
+var citySubmit = document.getElementById('submit-button');
+citySubmit.addEventListener('submit', urlifyCity);
