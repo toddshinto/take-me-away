@@ -1,5 +1,19 @@
 //AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4
 
+var city1;
+var geocode;
+var latitude;
+var longitude;
+var antiLat;
+var antiLong;
+var boundLat;
+var boundLong;
+var boundLat2;
+var boundLong2;
+var airportName;
+var airportList = [];
+var searchRequest;
+
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -15,6 +29,7 @@ function handleSubmit(event) {
   console.log(event);
   var formData = new FormData(event.target);
   var city = formData.get('city-input');
+  var date = formData.get('date');
   console.log(city);
   urlify(city);
   event.target.reset();
@@ -35,10 +50,7 @@ function cityGeocode(city) {
     fail: logError
   })
 }
-var city1;
-var geocode;
-var latitude;
-var longitude;
+
 //retrieves lat/long from returned geocode data
 function logSuccess(data) {
   city1 = data;
@@ -52,12 +64,7 @@ function logSuccess(data) {
 function logError(error) {
   console.log('error')
 }
-var antiLat;
-var antiLong;
-var boundLat;
-var boundLong;
-var boundLat2;
-var boundLong2;
+
 function antipode(latitude, longitude) {
   antiLat = latitude*(-1);
   if (longitude < 0) {
@@ -67,10 +74,10 @@ function antipode(latitude, longitude) {
   }
   console.log('antipode', antiLat, antiLong);
   reverseGeocode(antiLat, antiLong);
-  boundLat = (antiLat-20);
-  boundLong = (antiLong-20);
-  boundLat2 = (antiLat+20);
-  boundLong2 = (antiLong+20);
+  boundLat = (antiLat-30);
+  boundLong = (antiLong-30);
+  boundLat2 = (antiLat+30);
+  boundLong2 = (antiLong+30);
   geoNames(boundLat, boundLong, boundLat2, boundLong2)
 }
 
@@ -82,7 +89,7 @@ function reverseGeocode(antiLat, antiLong) {
     fail: logError
   })
 }
-var airportList = [];
+
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   $.ajax({
     method: "GET",
@@ -92,7 +99,6 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   })
 }
 
-var searchRequest;
 function geoNamesSuccess(data) {
   console.log(data);
   airportList = data;
@@ -108,7 +114,7 @@ function airportInfo(airportList) {
 function nearestAirportSuccess (data) {
   console.log('airport', data);
 }
-var airportName;
+
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
 function findAirport(searchRequest) {
   var settings = {
@@ -139,6 +145,11 @@ function checkEmpty(airportName) {
     findAirport(searchRequest);
   }
 }
+var flightQuery;
+var carrierArray;
+var destination;
+var destinationCity;
+var minQuote;
 
 function findFlights(airportName) {
   var settings = {
@@ -153,6 +164,33 @@ function findFlights(airportName) {
   }
 
   $.ajax(settings).done(function (response) {
-    console.log(response);
+    console.log('yes', response);
+    flightQuery = response;
+    flightInformation(flightQuery);
+  });
+}
+
+function flightInformation(flightQuery) {
+  carrierArray = flightQuery.Carriers;
+  destination = flightQuery.Places[1].Name;
+  destinationCity = flightQuery.Places[1].CityName;
+  minQuote = flightQuery.Quotes[0].MinPrice;
+}
+
+function testFlights() {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/SFO-sky/2020-12-17",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+    }
+  }
+
+  $.ajax(settings).done(function (response) {
+    console.log('yes', response);
+    flightQuery = response;
   });
 }
