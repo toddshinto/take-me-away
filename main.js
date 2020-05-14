@@ -13,17 +13,23 @@ var boundLong2;
 var airportName;
 var airportList = [];
 var searchRequest;
+var flightQuery;
+var carrierArray;
+var destination;
+var destinationCity;
+var minQuote;
+var city;
+var date;
+
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
 var formContainer = document.getElementById('form-container');
+var input = document.getElementById('city-input');
+var autocomplete = new google.maps.places.Autocomplete(input, options);
 //auto complete cities only
 var options = {
   types: ['(cities)']
 }
-var input = document.getElementById('city-input');
-var autocomplete = new google.maps.places.Autocomplete(input, options);
-var city;
-var date;
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
 citySubmit.addEventListener('submit', handleSubmit);
@@ -152,11 +158,6 @@ function checkEmpty(airportName) {
     findAirport(searchRequest);
   }
 }
-var flightQuery;
-var carrierArray;
-var destination;
-var destinationCity;
-var minQuote;
 
 function findFlights(airportName) {
   var settings = {
@@ -233,22 +234,4 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdMinQuote.textContent = minQuote;
   row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
   tbody.append(row);
-}
-
-function testFlights() {
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/SFO-sky/2020-12-17",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-    }
-  }
-
-  $.ajax(settings).done(function (response) {
-    console.log('yes', response);
-    flightQuery = response;
-  });
 }
