@@ -134,10 +134,12 @@ function nearestAirportSuccess (data) {
 }
 var homeCity;
 var homeAirportName;
+var homeCityUnformatted;
 function homeAirport() {
-  homeCity = city1.results[0].formatted_address.trim().replace(/\s/g, '%20');
-  homeCity = homeCity.split(',');
+  homeCity = city1.results[0].formatted_address.split(',');
+  homeCityUnformatted = homeCity[0];
   homeCity = homeCity[0];
+  homeCity = homeCity.trim().replace(/\s/g, '%20');
   findHomeAirport(homeCity);
 }
 function findHomeAirport(homeCity) {
@@ -237,7 +239,7 @@ function renderNoFlights(city, destinationCity) {
   var row = document.createElement('tr');
   var tdTryGoogle = document.createElement('td');
   var tdTryGoogleLink = document.createElement('a');
-  var tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results. Try Google?');
+  var tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'. Try Google?');
   airportName = airportName.replace('-sky','');
   tdTryGoogleLink.appendChild(tdTryGoogleTextNode);
   date = date.replace(/-/g, ' ')
