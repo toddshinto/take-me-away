@@ -13,6 +13,11 @@ var boundLong2;
 var airportName;
 var airportList = [];
 var searchRequest;
+var flightQuery;
+var carrierArray;
+var destination;
+var destinationCity;
+var minQuote;
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
 var formContainer = document.getElementById('form-container');
@@ -152,11 +157,6 @@ function checkEmpty(airportName) {
     findAirport(searchRequest);
   }
 }
-var flightQuery;
-var carrierArray;
-var destination;
-var destinationCity;
-var minQuote;
 
 function findFlights(airportName) {
   var settings = {
