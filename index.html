@@ -9,25 +9,37 @@
   <title>Take Me Away</title>
 </head>
 <body>
+  <div class="loading-screen hidden" id="loading-screen">
+    <div class="loading loading--plane" title="Loading">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.5 104">
+        <path
+          d="M97.7 41.5c16.3 0 16.3 21-.2 21H66.7l-26 38H29.2l14.1-38h-23l-7.8 10h-9L8.2 52 3.5 31.5h9l7.8 10h23.1l-14.1-38h11.4l26 38h31z"
+          fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+          stroke-miterlimit="10" stroke="#000" stroke-width="4" />
+      </svg>
+    </div>
+  </div>
   <div class="main-container">
-    <div class="title-container">
+    <div class="title-container" id="title-container">
       <h1>Take You Away</h1>
     </div>
     <div class="form-container" id="form-container">
       <form class="city-form">
-        <input type="text" class="city-input" name="city-input" id="city-input" required>
-        <input type="date" name="date" required>
-        <button type="submit" class="submit-button"></button>
+        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Your City" required>
+        <input type="date" class="date" id="date" name="date" required>
+        <button type="submit" class="submit-button">submit</button>
       </form>
     </div>
     <div class="table-container row hidden" id="table-container">
       <table class="table table-striped table-bordered col" id="table">
-        <thead class="thead-light">
-          <th scope="col">Carrier</th>
-          <th scope="col">Airport</th>
-          <th scope="col">City</th>
-          <th scope="col">Min Price</th>
-          <th scope="col">Book via Google</th>
+        <thead class="thead-light thead-custom">
+          <tr>
+            <th class="th" scope="col">Carrier</th>
+            <th class="th" scope="col">Airport</th>
+            <th class="th" scope="col">City</th>
+            <th class="th" scope="col">Min Price</th>
+            <th class="th" scope="col">Book via Google</th>
+          </tr>
         </thead>
         <tbody></tbody>
       </table>

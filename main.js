@@ -20,11 +20,13 @@ var destinationCity;
 var minQuote;
 var city;
 var date;
-
+var today = new Date().toISOString().substr(0, 10);
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
 var formContainer = document.getElementById('form-container');
 var input = document.getElementById('city-input');
+var loadingScreen = document.getElementById('loading-screen');
+var titleContainer = document.getElementById('title-container');
 var autocomplete = new google.maps.places.Autocomplete(input, options);
 //auto complete cities only
 var options = {
@@ -32,7 +34,10 @@ var options = {
 }
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
+
 citySubmit.addEventListener('submit', handleSubmit);
+document.getElementById('date').value = today;
+
 function handleSubmit(event) {
   event.preventDefault();
   console.log(event);
@@ -41,7 +46,8 @@ function handleSubmit(event) {
   date = formData.get('date');
   console.log(city);
   urlify(city);
-  tableContainer.classList.remove('hidden');
+  loadingScreen.classList.remove('hidden');
+  titleContainer.classList.add('hidden');
   formContainer.classList.add('hidden');
   event.target.reset();
 }
@@ -193,6 +199,9 @@ function flightInformation(flightQuery) {
     console.log(flightQuery);
     renderNoFlights(city, destinationCity);
   }
+  loadingScreen.classList.add('hidden');
+  tableContainer.classList.remove('hidden');
+  titleContainer.classList.remove('hidden');
 }
 
 function renderNoFlights(city, destinationCity) {
