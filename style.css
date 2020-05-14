@@ -27,7 +27,7 @@ h1 {
   text-indent: 10px;
   border: none;
   background-color: rgba(255, 255, 255, 0.6);
-  color: rgb(46, 175, 222);
+  color: rgba(46, 175, 222, .8);
   text-shadow: 1px 1px 1px white;
   box-shadow: inset 0 0 3px rgb(46, 175, 222);
   width: 400px;
