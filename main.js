@@ -1,12 +1,29 @@
 //AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4
 
+var city1;
+var geocode;
+var latitude;
+var longitude;
+var antiLat;
+var antiLong;
+var boundLat;
+var boundLong;
+var boundLat2;
+var boundLong2;
+var airportName;
+var airportList = [];
+var searchRequest;
+var tbody = document.querySelector('tbody');
+var tableContainer = document.getElementById('table-container');
+var formContainer = document.getElementById('form-container');
 //auto complete cities only
 var options = {
   types: ['(cities)']
 }
 var input = document.getElementById('city-input');
 var autocomplete = new google.maps.places.Autocomplete(input, options);
-
+var city;
+var date;
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
 citySubmit.addEventListener('submit', handleSubmit);
@@ -14,9 +31,12 @@ function handleSubmit(event) {
   event.preventDefault();
   console.log(event);
   var formData = new FormData(event.target);
-  var city = formData.get('city-input');
+  city = formData.get('city-input');
+  date = formData.get('date');
   console.log(city);
   urlify(city);
+  tableContainer.classList.remove('hidden');
+  formContainer.classList.add('hidden');
   event.target.reset();
 }
 
@@ -35,10 +55,7 @@ function cityGeocode(city) {
     fail: logError
   })
 }
-var city1;
-var geocode;
-var latitude;
-var longitude;
+
 //retrieves lat/long from returned geocode data
 function logSuccess(data) {
   city1 = data;
@@ -52,12 +69,7 @@ function logSuccess(data) {
 function logError(error) {
   console.log('error')
 }
-var antiLat;
-var antiLong;
-var boundLat;
-var boundLong;
-var boundLat2;
-var boundLong2;
+
 function antipode(latitude, longitude) {
   antiLat = latitude*(-1);
   if (longitude < 0) {
@@ -67,10 +79,10 @@ function antipode(latitude, longitude) {
   }
   console.log('antipode', antiLat, antiLong);
   reverseGeocode(antiLat, antiLong);
-  boundLat = (antiLat-20);
-  boundLong = (antiLong-20);
-  boundLat2 = (antiLat+20);
-  boundLong2 = (antiLong+20);
+  boundLat = (antiLat-30);
+  boundLong = (antiLong-30);
+  boundLat2 = (antiLat+30);
+  boundLong2 = (antiLong+30);
   geoNames(boundLat, boundLong, boundLat2, boundLong2)
 }
 
@@ -82,7 +94,7 @@ function reverseGeocode(antiLat, antiLong) {
     fail: logError
   })
 }
-var airportList = [];
+
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   $.ajax({
     method: "GET",
@@ -92,7 +104,6 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   })
 }
 
-var searchRequest;
 function geoNamesSuccess(data) {
   console.log(data);
   airportList = data;
@@ -108,7 +119,7 @@ function airportInfo(airportList) {
 function nearestAirportSuccess (data) {
   console.log('airport', data);
 }
-var airportName;
+
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
 function findAirport(searchRequest) {
   var settings = {
@@ -123,6 +134,8 @@ function findAirport(searchRequest) {
   }
   $.ajax(settings).done(function (data) {
     console.log('data', data, 'data.length', data.Places.length);
+    destinationCity = data.Places[0].PlaceName;
+    console.log(destinationCity);
     if (data.Places.length != 0) {
       airportName = data.Places[0].PlaceId;
     }
@@ -139,12 +152,17 @@ function checkEmpty(airportName) {
     findAirport(searchRequest);
   }
 }
+var flightQuery;
+var carrierArray;
+var destination;
+var destinationCity;
+var minQuote;
 
 function findFlights(airportName) {
   var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/2020-12-17",
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/"+date,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
@@ -153,6 +171,84 @@ function findFlights(airportName) {
   }
 
   $.ajax(settings).done(function (response) {
-    console.log(response);
+    console.log('yes', response);
+    flightQuery = response;
+    flightInformation(flightQuery);
+  });
+}
+
+function flightInformation(flightQuery) {
+  if (flightQuery.Carriers.length != 0){
+    carrierArray = flightQuery.Carriers;
+    destination = flightQuery.Places[1].Name;
+    destinationCity = flightQuery.Places[1].CityName;
+    if (flightQuery.Quotes.length > 0) {
+      minQuote = "$"+flightQuery.Quotes[0].MinPrice;
+    } else {
+      minQuote = "N/A";
+    }
+    renderFlightRow(carrierArray, destination, destinationCity, minQuote);
+  } else {
+    console.log(flightQuery);
+    renderNoFlights(city, destinationCity);
+  }
+}
+
+function renderNoFlights(city, destinationCity) {
+  var row = document.createElement('tr');
+  var tdTryGoogle = document.createElement('td');
+  var tdTryGoogleLink = document.createElement('a');
+  var tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results. Try Google?');
+  airportName = airportName.replace('-sky','');
+  tdTryGoogleLink.appendChild(tdTryGoogleTextNode);
+  date = date.replace(/-/g, ' ')
+  tdTryGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" " + date;
+  tdTryGoogleLink.target = "_blank";
+  tdTryGoogle.append(tdTryGoogleLink);
+  tdTryGoogle.colSpan = 5;
+  row.append(tdTryGoogle);
+  tbody.append(row);
+}
+
+function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  var row = document.createElement('tr');
+  var tdCarrier = document.createElement('td');
+  var tdDestination = document.createElement('td');
+  var tdDestinationCity = document.createElement('td');
+  var tdMinQuote = document.createElement('td');
+  var tdGoogle = document.createElement('td');
+  var tdGoogleLink = document.createElement('a');
+  var tdGoogleLinkTextNode = document.createTextNode('Google Flights');
+  tdGoogleLink.appendChild(tdGoogleLinkTextNode);
+  date = date.replace(/-/g, ' ')
+  tdGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" "+date + " one way";
+  tdGoogleLink.target = "_blank";
+  tdGoogle.append(tdGoogleLink);
+  tdCarrier.textContent = carrierArray[0].Name;
+  tdDestination.textContent = destination;
+  tdDestinationCity.textContent = destinationCity;
+  tdMinQuote.textContent = minQuote;
+  row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
+  tbody.append(row);
+}
+
+function testFlights() {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/SFO-sky/2020-12-17",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+    }
+  }
+
+  $.ajax(settings).done(function (response) {
+    console.log('yes', response);
+    flightQuery = response;
   });
 }
