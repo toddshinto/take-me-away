@@ -20,19 +20,24 @@ var destinationCity;
 var minQuote;
 var city;
 var date;
-
+var today = new Date().toISOString().substr(0, 10);
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
 var formContainer = document.getElementById('form-container');
 var input = document.getElementById('city-input');
-var autocomplete = new google.maps.places.Autocomplete(input, options);
+var loadingScreen = document.getElementById('loading-screen');
+var titleContainer = document.getElementById('title-container');
 //auto complete cities only
 var options = {
   types: ['(cities)']
 }
+var autocomplete = new google.maps.places.Autocomplete(input, options);
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
+
 citySubmit.addEventListener('submit', handleSubmit);
+document.getElementById('date').value = today;
+
 function handleSubmit(event) {
   event.preventDefault();
   console.log(event);
@@ -41,7 +46,8 @@ function handleSubmit(event) {
   date = formData.get('date');
   console.log(city);
   urlify(city);
-  tableContainer.classList.remove('hidden');
+  loadingScreen.classList.remove('hidden');
+  titleContainer.classList.add('hidden');
   formContainer.classList.add('hidden');
   event.target.reset();
 }
@@ -71,6 +77,7 @@ function logSuccess(data) {
   console.log('success', data)
   console.log('logsucces', latitude, longitude);
   antipode(latitude, longitude);
+  homeAirport(city1);
 }
 function logError(error) {
   console.log('error')
@@ -125,7 +132,35 @@ function airportInfo(airportList) {
 function nearestAirportSuccess (data) {
   console.log('airport', data);
 }
-
+var homeCity;
+var homeAirportName;
+function homeAirport() {
+  homeCity = city1.results[0].formatted_address.trim().replace(/\s/g, '%20');
+  homeCity = homeCity.split(',');
+  homeCity = homeCity[0];
+  findHomeAirport(homeCity);
+}
+function findHomeAirport(homeCity) {
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query=" + homeCity,
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+    }
+  }
+  $.ajax(settings).done(function (data) {
+    console.log('data', data, 'data.length', data.Places.length);
+    homeAirportName = data.Places[0].PlaceName;
+    console.log(homeAirportName);
+    if (data.Places.length != 0) {
+      homeAirportName = data.Places[0].PlaceId;
+    }
+    console.log(homeAirportName)
+  });
+}
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
 function findAirport(searchRequest) {
   var settings = {
@@ -140,10 +175,10 @@ function findAirport(searchRequest) {
   }
   $.ajax(settings).done(function (data) {
     console.log('data', data, 'data.length', data.Places.length);
-    destinationCity = data.Places[0].PlaceName;
+    destinationCity = data.Places[data.Places.length-1].PlaceName;
     console.log(destinationCity);
     if (data.Places.length != 0) {
-      airportName = data.Places[0].PlaceId;
+      airportName = data.Places[data.Places.length - 1].PlaceId;
     }
     checkEmpty(airportName);
   });
@@ -163,7 +198,7 @@ function findFlights(airportName) {
   var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/"+date,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportName+"/"+airportName+"/"+date,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
@@ -193,6 +228,9 @@ function flightInformation(flightQuery) {
     console.log(flightQuery);
     renderNoFlights(city, destinationCity);
   }
+  loadingScreen.classList.add('hidden');
+  tableContainer.classList.remove('hidden');
+  titleContainer.classList.remove('hidden');
 }
 
 function renderNoFlights(city, destinationCity) {

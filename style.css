@@ -1,3 +1,86 @@
+
+@font-face {
+    font-family: 'heritageregular';
+    src: url('fonts/heritage_font-webfont.woff2') format('woff2'),
+         url('fonts/heritage_font-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'voster_typefaceregular';
+    src: url('fonts/voster_font-webfont.woff2') format('woff2'),
+         url('fonts/voster_font-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+h1 {
+  font-family: heritageregular;
+  font-size: 90px;
+  color: white;
+}
+
+.city-input {
+  font-family: voster_typefaceregular;
+  text-indent: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.6);
+  color: rgba(46, 175, 222, .8);
+  text-shadow: 1px 1px 1px white;
+  box-shadow: inset 0 0 3px rgb(46, 175, 222);
+  width: 400px;
+  height: 50px;
+  border-radius: 7px;
+  font-size: 24px;
+}
+
+.city-input::placeholder {
+  color: rgba(46, 175, 222, 0.404);
+  text-shadow: 1px 1px 1px white;
+}
+
+.date {
+  font-family: voster_typefaceregular;
+  padding-left: 6px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.6);
+  color: rgba(46, 175, 222, .8);
+  text-shadow: 1px 1px 1px white;
+  box-shadow: inset 0 0 2px rgb(46, 175, 222);
+  font-size: 24px;
+}
+
+.submit-button {
+  font-family: heritageregular;
+  border: none;
+  color: rgb(46, 175, 222);
+  text-shadow: 2px 2px 2px white;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  text-transform: capitalize;
+  font-size: 38px;
+  width: 150px;
+  height: 50px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+}
+
+.submit-button:hover {
+  box-shadow: 0 0 3px rgb(46, 175, 222);
+}
+
+body {
+  height: 100vh;
+  background-image: url('images/sky-bg.jpg');
+  background-size: cover;
+  background-position: bottom;
+}
+
 .main-container {
   display: flex;
   flex-direction: column;
@@ -7,19 +90,76 @@
 }
 
 .city-form {
-  background-color: yellow;
+  background-color: rgba(255, 255, 255, .5);
   height: 200px;
   width: 500px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  border-radius: 10px;
 }
 
-.city-input {
-  width: 400px;
-  height: 50px;
-  border-radius: 7px;
+th.th[scope="col"] {
+  background-color: rgba(255, 255, 255, .6);
+  font-family: voster_typefaceregular;
+  color: white;
+  text-shadow: 1px 1px 1px rgb(46, 175, 222);
+  font-size: 30px;
+  text-align: center;
+  border: 2px solid white;
+}
+
+tbody>tr>td {
+  background-color: rgba(255, 255, 255, .3);
+  color: white;
+  font-family: voster_typefaceregular;
+  text-shadow: 1px 1px 1px rgb(46, 175, 222);
+  border: 2px solid white;
+  font-size: 24px;
+  text-align: center;
+}
+
+a {
+  color: white;
+}
+a:hover {
+  color: rgb(46, 175, 222);
+  text-shadow: 1px 1px 1px white;
+  text-decoration: none;
+}
+.thead-custom {
+  border-radius: 5px;
+}
+
+.title-container {
+  position: absolute;
+  top: 35px;
+}
+
+.loading--plane {
+  width: 200px;
+  stroke-dasharray: 425.59;
+  stroke-dashoffset: 425.59;
+  animation: plane-loading-animation 3s linear infinite;
+}
+
+.loading-screen {
+  position: absolute;
+  top: 25%;
+  left: 45%;
+}
+
+@keyframes plane-loading-animation {
+  50% {
+    stroke-dashoffset: 425.59;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -425.59;
+  }
 }
 
 .hidden {
