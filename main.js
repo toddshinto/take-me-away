@@ -13,14 +13,17 @@ var boundLong2;
 var airportName;
 var airportList = [];
 var searchRequest;
-
+var tbody = document.querySelector('tbody');
+var tableContainer = document.getElementById('table-container');
+var formContainer = document.getElementById('form-container');
 //auto complete cities only
 var options = {
   types: ['(cities)']
 }
 var input = document.getElementById('city-input');
 var autocomplete = new google.maps.places.Autocomplete(input, options);
-
+var city;
+var date;
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
 citySubmit.addEventListener('submit', handleSubmit);
@@ -28,10 +31,12 @@ function handleSubmit(event) {
   event.preventDefault();
   console.log(event);
   var formData = new FormData(event.target);
-  var city = formData.get('city-input');
-  var date = formData.get('date');
+  city = formData.get('city-input');
+  date = formData.get('date');
   console.log(city);
   urlify(city);
+  tableContainer.classList.remove('hidden');
+  formContainer.classList.add('hidden');
   event.target.reset();
 }
 
@@ -129,6 +134,8 @@ function findAirport(searchRequest) {
   }
   $.ajax(settings).done(function (data) {
     console.log('data', data, 'data.length', data.Places.length);
+    destinationCity = data.Places[0].PlaceName;
+    console.log(destinationCity);
     if (data.Places.length != 0) {
       airportName = data.Places[0].PlaceId;
     }
@@ -155,7 +162,7 @@ function findFlights(airportName) {
   var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/2020-12-17",
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/LAX-sky/"+airportName+"/"+date,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
@@ -171,10 +178,61 @@ function findFlights(airportName) {
 }
 
 function flightInformation(flightQuery) {
-  carrierArray = flightQuery.Carriers;
-  destination = flightQuery.Places[1].Name;
-  destinationCity = flightQuery.Places[1].CityName;
-  minQuote = flightQuery.Quotes[0].MinPrice;
+  if (flightQuery.Carriers.length != 0){
+    carrierArray = flightQuery.Carriers;
+    destination = flightQuery.Places[1].Name;
+    destinationCity = flightQuery.Places[1].CityName;
+    if (flightQuery.Quotes.length > 0) {
+      minQuote = "$"+flightQuery.Quotes[0].MinPrice;
+    } else {
+      minQuote = "N/A";
+    }
+    renderFlightRow(carrierArray, destination, destinationCity, minQuote);
+  } else {
+    console.log(flightQuery);
+    renderNoFlights(city, destinationCity);
+  }
+}
+
+function renderNoFlights(city, destinationCity) {
+  var row = document.createElement('tr');
+  var tdTryGoogle = document.createElement('td');
+  var tdTryGoogleLink = document.createElement('a');
+  var tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results. Try Google?');
+  airportName = airportName.replace('-sky','');
+  tdTryGoogleLink.appendChild(tdTryGoogleTextNode);
+  date = date.replace(/-/g, ' ')
+  tdTryGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" " + date;
+  tdTryGoogleLink.target = "_blank";
+  tdTryGoogle.append(tdTryGoogleLink);
+  tdTryGoogle.colSpan = 5;
+  row.append(tdTryGoogle);
+  tbody.append(row);
+}
+
+function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  var row = document.createElement('tr');
+  var tdCarrier = document.createElement('td');
+  var tdDestination = document.createElement('td');
+  var tdDestinationCity = document.createElement('td');
+  var tdMinQuote = document.createElement('td');
+  var tdGoogle = document.createElement('td');
+  var tdGoogleLink = document.createElement('a');
+  var tdGoogleLinkTextNode = document.createTextNode('Google Flights');
+  tdGoogleLink.appendChild(tdGoogleLinkTextNode);
+  date = date.replace(/-/g, ' ')
+  tdGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" "+date + " one way";
+  tdGoogleLink.target = "_blank";
+  tdGoogle.append(tdGoogleLink);
+  tdCarrier.textContent = carrierArray[0].Name;
+  tdDestination.textContent = destination;
+  tdDestinationCity.textContent = destinationCity;
+  tdMinQuote.textContent = minQuote;
+  row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
+  tbody.append(row);
 }
 
 function testFlights() {
