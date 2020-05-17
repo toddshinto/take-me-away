@@ -22,6 +22,14 @@ h1 {
   color: white;
 }
 
+.table-container {
+  flex-direction: column;
+}
+.reset-button-container {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+}
 .city-input {
   font-family: voster_typefaceregular;
   text-indent: 10px;
@@ -53,7 +61,7 @@ h1 {
   font-size: 24px;
 }
 
-.submit-button {
+.submit-button, .reset-button {
   font-family: heritageregular;
   border: none;
   color: rgb(46, 175, 222);
@@ -68,10 +76,21 @@ h1 {
   display: flex;
   justify-content: center;
   padding-top: 5px;
+  box-shadow: 2px 2px 2px rgb(46, 175, 222);
+  transition: .3s;
 }
-
+.submit-button {
+  font-size: 38px;
+}
+.reset-button {
+  font-size: 36px;
+}
 .submit-button:hover {
   box-shadow: 0 0 3px rgb(46, 175, 222);
+}
+
+.reset-button:hover {
+  box-shadow: inset 0 0 3px rgb(46, 175, 222);
 }
 
 body {

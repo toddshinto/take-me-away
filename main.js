@@ -27,6 +27,7 @@ var formContainer = document.getElementById('form-container');
 var input = document.getElementById('city-input');
 var loadingScreen = document.getElementById('loading-screen');
 var titleContainer = document.getElementById('title-container');
+var resetButton = document.getElementById('reset-button');
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -37,6 +38,16 @@ var citySubmit = document.querySelector('form');
 
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
+resetButton.addEventListener('click', resetPage);
+
+function resetPage() {
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  formContainer.classList.remove('hidden');
+  tableContainer.classList.add('hidden');
+  document.getElementById('date').value = today;
+}
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -262,10 +273,14 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   var tdMinQuote = document.createElement('td');
   var tdGoogle = document.createElement('td');
   var tdGoogleLink = document.createElement('a');
-  var tdGoogleLinkTextNode = document.createTextNode('Google Flights');
+  var tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
-  date = date.replace(/-/g, ' ')
-  tdGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" "+date + " one way";
+  date = date.replace(/-/g, ' ');
+  airportName = airportName.replace('-sky', '');
+  homeAirportName = homeAirportName.replace('-sky', '');
+  date = date.replace(/\s/g, '');
+  date = date.substring(2);
+  tdGoogleLink.href = "https://www.skyscanner.com/transport/flights/"+homeAirportName+"/"+airportName+"/"+date+"/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home";
   tdGoogleLink.target = "_blank";
   tdGoogle.append(tdGoogleLink);
   tdCarrier.textContent = carrierArray[0].Name;

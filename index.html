@@ -23,9 +23,12 @@
     <div class="title-container" id="title-container">
       <h1>Take You Away</h1>
     </div>
+    <div class="landing-page" id="landing-page">
+
+    </div>
     <div class="form-container" id="form-container">
       <form class="city-form">
-        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Your City" required>
+        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Closest Major City" required>
         <input type="date" class="date" id="date" name="date" required>
         <button type="submit" class="submit-button">submit</button>
       </form>
@@ -38,16 +41,17 @@
             <th class="th" scope="col">Airport</th>
             <th class="th" scope="col">City</th>
             <th class="th" scope="col">Min Price</th>
-            <th class="th" scope="col">Book via Google</th>
+            <th class="th" scope="col">Book Now</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
+      <div class="reset-button-container">
+        <button class="reset-button" id="reset-button" type="button">Try Again?</button>
+      </div>
     </div>
   </div>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4&libraries=places"></script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4&callback=initMap" async -->
-    <!-- defer></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="config.js"></script>
   <script src="main.js"></script>
