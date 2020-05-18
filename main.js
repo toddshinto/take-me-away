@@ -20,6 +20,11 @@ var destinationCity;
 var minQuote;
 var city;
 var date;
+var lat1;
+var lat2;
+var lon1;
+var lon2;
+var farthestDistance = 12450;
 var today = new Date().toISOString().substr(0, 10);
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
@@ -92,6 +97,8 @@ function cityGeocode(city) {
 function logSuccess(data) {
   city1 = data;
   geocode = city1.results[0].geometry.location;
+  lat1=geocode.lat;
+  lon1=geocode.lng;
   latitude = geocode.lat;
   longitude = geocode.lng;
   console.log('success', data)
@@ -140,6 +147,8 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
 function geoNamesSuccess(data) {
   console.log(data);
   airportList = data;
+  lat2 = parseFloat(airportList.geonames[0].lat);
+  lon2 = parseFloat(airportList.geonames[0].lng);
   airportInfo(data);
 }
 function airportInfo(airportList) {
@@ -254,7 +263,7 @@ function flightInformation(flightQuery) {
   tableContainer.classList.remove('hidden');
   titleContainer.classList.remove('hidden');
 }
-
+var distance;
 function renderNoFlights(city, destinationCity) {
   var row = document.createElement('tr');
   var tdTryGoogle = document.createElement('td');
@@ -267,6 +276,7 @@ function renderNoFlights(city, destinationCity) {
   tdTryGoogleLink.target = "_blank";
   tdTryGoogle.append(tdTryGoogleLink);
   tdTryGoogle.colSpan = 5;
+  distance = calculateDistance();
   row.append(tdTryGoogle);
   tbody.append(row);
 }
@@ -298,4 +308,20 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdMinQuote.textContent = minQuote;
   row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
   tbody.append(row);
+}
+
+function calculateDistance() {
+  const R = 6371e3; // metres
+  const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+  const φ2 = lat2 * Math.PI / 180;
+  const Δφ = (lat2 - lat1) * Math.PI / 180;
+  const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) *
+    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = (R * c)/1609;
+  return d; // in metres
 }
