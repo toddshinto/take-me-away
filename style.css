@@ -285,6 +285,15 @@ a:hover {
   position: absolute;
   right: 5px;
 }
+
+.search-failed {
+  margin-top: 20px;
+}
+
+.search-failed-try {
+  margin-top: 55px;
+}
+
 .hidden {
   display: none;
 }

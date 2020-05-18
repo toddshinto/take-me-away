@@ -36,9 +36,11 @@ var resetButton = document.getElementById('reset-button');
 var landingPage = document.getElementById('landing-page');
 var getStarted = document.getElementById('get-started');
 var mainContainer = document.getElementById('main-container');
+var searchFailed = document.getElementById('search-failed-container');
 var distanceRatio;
 var distanceWidth = document.getElementById('distance');
 var distanceMiles = document.getElementById('distance-miles');
+var searchFailedButton = document.getElementById('search-failed-btn');
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -51,6 +53,13 @@ citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
 getStarted.addEventListener('click', startPage);
+searchFailedButton.addEventListener('click', tryAgainPage);
+
+function tryAgainPage() {
+  searchFailed.classList.add('hidden');
+  mainContainer.classList.remove('hidden');
+  resetPage();
+}
 
 function startPage() {
   landingPage.classList.add('hidden');
@@ -63,6 +72,7 @@ function resetPage() {
   }
   formContainer.classList.remove('hidden');
   tableContainer.classList.add('hidden');
+  titleContainer.classList.remove('hidden');
   document.getElementById('date').value = today;
 }
 
@@ -239,12 +249,16 @@ function findFlights(airportName) {
       "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
     }
   }
-
   $.ajax(settings).done(function (response) {
     console.log('yes', response);
     flightQuery = response;
     flightInformation(flightQuery);
-  });
+  })
+    .fail(function (response) {
+      console.log('failed');
+      loadingScreen.classList.add('hidden');
+      searchFailed.classList.remove('hidden');
+    });
 }
 
 function flightInformation(flightQuery) {
