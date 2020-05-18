@@ -28,6 +28,9 @@ var input = document.getElementById('city-input');
 var loadingScreen = document.getElementById('loading-screen');
 var titleContainer = document.getElementById('title-container');
 var resetButton = document.getElementById('reset-button');
+var landingPage = document.getElementById('landing-page');
+var getStarted = document.getElementById('get-started');
+var mainContainer = document.getElementById('main-container');
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -39,6 +42,12 @@ var citySubmit = document.querySelector('form');
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
+getStarted.addEventListener('click', startPage);
+
+function startPage() {
+  landingPage.classList.add('hidden');
+  mainContainer.classList.remove('hidden');
+}
 
 function resetPage() {
   while (tbody.firstChild) {
