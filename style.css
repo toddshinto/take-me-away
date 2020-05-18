@@ -261,8 +261,8 @@ a:hover {
 
 @keyframes show {
   0% {margin-top:-270px;}
-  5% {margin-top:-180px;}
-  33% {margin-top:-180px;}
+  5% {margin-top:-175px;}
+  33% {margin-top:-175px;}
   38% {margin-top:-90px;}
   66% {margin-top:-90px;}
   71% {margin-top:-5px;}
