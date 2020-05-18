@@ -100,12 +100,10 @@ h1 {
 .reset-button {
   font-size: 36px;
 }
-.submit-button:hover {
-  box-shadow: 0 0 3px rgb(46, 175, 222);
-}
 
-.reset-button:hover, .get-started:hover {
-  box-shadow: inset 0 0 3px rgb(46, 175, 222);
+.reset-button:hover, .get-started:hover, .submit-button:hover {
+  box-shadow: 0 0 3px rgb(46, 175, 222);
+  transition: .3s;
 }
 
 body {
