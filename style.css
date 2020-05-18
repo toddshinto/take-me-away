@@ -283,7 +283,7 @@ a:hover {
   color: rgba(46, 175, 222, 0.9);
   text-shadow: 1px 1px 1px white;
   position: absolute;
-  right: 0px;
+  right: 5px;
 }
 .hidden {
   display: none;
