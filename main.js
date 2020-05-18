@@ -36,6 +36,9 @@ var resetButton = document.getElementById('reset-button');
 var landingPage = document.getElementById('landing-page');
 var getStarted = document.getElementById('get-started');
 var mainContainer = document.getElementById('main-container');
+var distanceRatio;
+var distanceWidth = document.getElementById('distance');
+var distanceMiles = document.getElementById('distance-miles');
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -277,10 +280,17 @@ function renderNoFlights(city, destinationCity) {
   tdTryGoogle.append(tdTryGoogleLink);
   tdTryGoogle.colSpan = 5;
   distance = calculateDistance();
+  distanceRatio = (distance/farthestDistance)*100;
+  distance = Math.round(distance);
+  distance = numberWithCommas(distance);
+  distanceMiles.textContent = distance+" miles";
+  distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   row.append(tdTryGoogle);
   tbody.append(row);
 }
-
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
 function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
@@ -307,6 +317,12 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdDestinationCity.textContent = destinationCity;
   tdMinQuote.textContent = minQuote;
   row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
+  distance = calculateDistance();
+  distanceRatio = (distance / farthestDistance) * 100;
+  distance = Math.round(distance);
+  distance = numberWithCommas(distance);
+  distanceMiles.textContent = distance + " miles";
+  distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   tbody.append(row);
 }
 
