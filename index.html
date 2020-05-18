@@ -9,6 +9,25 @@
   <title>Take Me Away</title>
 </head>
 <body>
+  <div id="landing-page" class="landing-page">
+    <div id="landing-container" class="landing-container">
+      SEND YOUR
+      <div id=flip>
+        <div>
+          <div>FAMILY</div>
+        </div>
+        <div>
+          <div>FRIENDS</div>
+        </div>
+        <div>
+          <div>SELF</div>
+        </div>
+      </div>
+      Away
+
+    <button type="button" class="get-started" id="get-started">Start</button>
+    </div>
+  </div>
   <div class="loading-screen hidden" id="loading-screen">
     <div class="loading loading--plane" title="Loading">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.5 104">
@@ -19,13 +38,13 @@
       </svg>
     </div>
   </div>
-  <div class="main-container">
+  <div class="main-container hidden" id="main-container">
     <div class="title-container" id="title-container">
       <h1>Take You Away</h1>
     </div>
     <div class="form-container" id="form-container">
       <form class="city-form">
-        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Your City" required>
+        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Closest Major City" required>
         <input type="date" class="date" id="date" name="date" required>
         <button type="submit" class="submit-button">submit</button>
       </form>
@@ -38,16 +57,23 @@
             <th class="th" scope="col">Airport</th>
             <th class="th" scope="col">City</th>
             <th class="th" scope="col">Min Price</th>
-            <th class="th" scope="col">Book via Google</th>
+            <th class="th" scope="col">Book Now</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
+      <div class="distance-calculator">
+        <div class="distance" id="distance">
+          Distance from home location: <div id="distance-miles"></div>
+        </div>
+        <div class="possible-distance">12,450 mi.</div>
+      </div>
+      <div class="reset-button-container">
+        <button class="reset-button" id="reset-button" type="button">Try Again?</button>
+      </div>
     </div>
   </div>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4&libraries=places"></script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4&callback=initMap" async -->
-    <!-- defer></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="config.js"></script>
   <script src="main.js"></script>

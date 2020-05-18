@@ -20,6 +20,11 @@ var destinationCity;
 var minQuote;
 var city;
 var date;
+var lat1;
+var lat2;
+var lon1;
+var lon2;
+var farthestDistance = 12450;
 var today = new Date().toISOString().substr(0, 10);
 var tbody = document.querySelector('tbody');
 var tableContainer = document.getElementById('table-container');
@@ -27,6 +32,13 @@ var formContainer = document.getElementById('form-container');
 var input = document.getElementById('city-input');
 var loadingScreen = document.getElementById('loading-screen');
 var titleContainer = document.getElementById('title-container');
+var resetButton = document.getElementById('reset-button');
+var landingPage = document.getElementById('landing-page');
+var getStarted = document.getElementById('get-started');
+var mainContainer = document.getElementById('main-container');
+var distanceRatio;
+var distanceWidth = document.getElementById('distance');
+var distanceMiles = document.getElementById('distance-miles');
 //auto complete cities only
 var options = {
   types: ['(cities)']
@@ -37,6 +49,22 @@ var citySubmit = document.querySelector('form');
 
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
+resetButton.addEventListener('click', resetPage);
+getStarted.addEventListener('click', startPage);
+
+function startPage() {
+  landingPage.classList.add('hidden');
+  mainContainer.classList.remove('hidden');
+}
+
+function resetPage() {
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.lastChild);
+  }
+  formContainer.classList.remove('hidden');
+  tableContainer.classList.add('hidden');
+  document.getElementById('date').value = today;
+}
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -72,6 +100,8 @@ function cityGeocode(city) {
 function logSuccess(data) {
   city1 = data;
   geocode = city1.results[0].geometry.location;
+  lat1=geocode.lat;
+  lon1=geocode.lng;
   latitude = geocode.lat;
   longitude = geocode.lng;
   console.log('success', data)
@@ -120,6 +150,8 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
 function geoNamesSuccess(data) {
   console.log(data);
   airportList = data;
+  lat2 = parseFloat(airportList.geonames[0].lat);
+  lon2 = parseFloat(airportList.geonames[0].lng);
   airportInfo(data);
 }
 function airportInfo(airportList) {
@@ -234,7 +266,7 @@ function flightInformation(flightQuery) {
   tableContainer.classList.remove('hidden');
   titleContainer.classList.remove('hidden');
 }
-
+var distance;
 function renderNoFlights(city, destinationCity) {
   var row = document.createElement('tr');
   var tdTryGoogle = document.createElement('td');
@@ -247,10 +279,18 @@ function renderNoFlights(city, destinationCity) {
   tdTryGoogleLink.target = "_blank";
   tdTryGoogle.append(tdTryGoogleLink);
   tdTryGoogle.colSpan = 5;
+  distance = calculateDistance();
+  distanceRatio = (distance/farthestDistance)*100;
+  distance = Math.round(distance);
+  distance = numberWithCommas(distance);
+  distanceMiles.textContent = distance+" miles";
+  distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   row.append(tdTryGoogle);
   tbody.append(row);
 }
-
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
 function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
@@ -262,10 +302,14 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   var tdMinQuote = document.createElement('td');
   var tdGoogle = document.createElement('td');
   var tdGoogleLink = document.createElement('a');
-  var tdGoogleLinkTextNode = document.createTextNode('Google Flights');
+  var tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
-  date = date.replace(/-/g, ' ')
-  tdGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" "+date + " one way";
+  date = date.replace(/-/g, ' ');
+  airportName = airportName.replace('-sky', '');
+  homeAirportName = homeAirportName.replace('-sky', '');
+  date = date.replace(/\s/g, '');
+  date = date.substring(2);
+  tdGoogleLink.href = "https://www.skyscanner.com/transport/flights/"+homeAirportName+"/"+airportName+"/"+date+"/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home";
   tdGoogleLink.target = "_blank";
   tdGoogle.append(tdGoogleLink);
   tdCarrier.textContent = carrierArray[0].Name;
@@ -273,5 +317,27 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdDestinationCity.textContent = destinationCity;
   tdMinQuote.textContent = minQuote;
   row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
+  distance = calculateDistance();
+  distanceRatio = (distance / farthestDistance) * 100;
+  distance = Math.round(distance);
+  distance = numberWithCommas(distance);
+  distanceMiles.textContent = distance + " miles";
+  distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   tbody.append(row);
+}
+
+function calculateDistance() {
+  const R = 6371e3; // metres
+  const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+  const φ2 = lat2 * Math.PI / 180;
+  const Δφ = (lat2 - lat1) * Math.PI / 180;
+  const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) *
+    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = (R * c)/1609;
+  return d; // in metres
 }
