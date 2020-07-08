@@ -30,11 +30,14 @@ app.get("/api/geocode/:city", (req, res) => {
       });
 });
 
-app.get("/api/geonames", (req, res) => {
-  const lat1 = req.params.boundLat;
-  const lon1 = req.params.boundLong;
-  const lat2 = req.params.boundLat2;
-  const lon2 = req.params.boundLong2;
+app.get("/api/geonames/:lat1/:lon1/:lat2/:lon2", (req, res) => {
+  const lat1 = req.params.lat1;
+  const lon1 = req.params.lon1;
+  const lat2 = req.params.lat2;
+  const lon2 = req.params.lon2;
+  console.log(req.parmas)
+  console.log(lat1, lon1, lat2, lon2)
+  console.log(`http://api.geonames.org/search?type=json&q=airport&featureCode=AIRP&west=${lon1}&north=${lat2}&east=${lon2}&south=${lat1}&username=toddshinto`)
   fetch(`http://api.geonames.org/search?type=json&q=airport&featureCode=AIRP&west=${lon1}&north=${lat2}&east=${lon2}&south=${lat1}&username=toddshinto`)
     .then(result => result.json())
     .then(data => {
