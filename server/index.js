@@ -11,7 +11,9 @@ app.use(cors());
 
 app.get('/api/geocode', (req, res) => {
   const city = req.query.city;
+  console.log(req.query.city)
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
+    .then(response => response.json())
     .then(data => {
       return res.status(200).send(data);
     })
@@ -47,7 +49,7 @@ app.use('/api', (req, res, next) => {
   next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   if (err instanceof ClientError) {
     res.status(err.status).json({ error: err.message });
   } else {
