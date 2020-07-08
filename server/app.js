@@ -13,8 +13,6 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(cors());
 
-app.get("/", (req, res) => res.send("Hello World!"));
-
 app.get("/api/geocode/:city", (req, res) => {
     const city = req.params.city;
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
@@ -50,5 +48,7 @@ app.get("/api/geonames/:lat1/:lon1/:lat2/:lon2", (req, res) => {
 app.get('/api/health-check', (req, res) => {
   return res.status(200).json({message: 'successful health check'})
 });
+
+app.get("/", (req, res) => res.send("Hello World!"));
 
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
