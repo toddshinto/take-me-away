@@ -106,7 +106,7 @@ function cityGeocode(city) {
 
 //retrieves lat/long from returned geocode data
 function logSuccess(data) {
-  city1 = data;
+  city1 = JSON.parse(data);
   geocode = city1.results[0].geometry.location;
   lat1=geocode.lat;
   lon1=geocode.lng;

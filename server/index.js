@@ -12,7 +12,6 @@ app.use(cors());
 app.get('/api/geocode', (req, res) => {
   const city = req.query.city;
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
-    .then(result => result.json())
     .then(data => {
       return res.status(200).send(data);
     })
