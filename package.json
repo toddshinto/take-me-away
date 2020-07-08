@@ -4,9 +4,9 @@
   "description": "a simple backend relay for hiding keys",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "debug": "nodemon --inspect index.js"
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "debug": "nodemon --inspect server/index.js"
   },
   "author": "Todd Shinto",
   "license": "MIT",
