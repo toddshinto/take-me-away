@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require("express");
 const fetch = require("node-fetch");
 const rateLimit = require("express-rate-limit");
-const staticMiddleware = require('./static-middleware')
 var cors = require("cors");
 const app = express();
 
@@ -13,7 +12,6 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(cors());
-app.use(staticMiddleware)
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
