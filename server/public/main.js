@@ -95,7 +95,7 @@ function urlify(city) {
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
-    url: `http://localhost:3001/api/geocode/${city}`,
+    url: `/api/geocode/${city}`,
     method: "GET",
     success: logSuccess,
     fail: logError
@@ -136,7 +136,7 @@ function antipode(latitude, longitude) {
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
   $.ajax({
     method: "GET",
-    url: `http://localhost:3001/api/geonames/${boundLat}/${boundLong}/${boundLat2}/${boundLong2}`,
+    url: `/api/geonames/${boundLat}/${boundLong}/${boundLat2}/${boundLong2}`,
     dataType: "json",
     success: geoNamesSuccess,
     fail: logError
