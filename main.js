@@ -1,5 +1,3 @@
-//AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4
-
 var city1;
 var geocode;
 var latitude;
@@ -78,11 +76,9 @@ function resetPage() {
 
 function handleSubmit(event) {
   event.preventDefault();
-  console.log(event);
   var formData = new FormData(event.target);
   city = formData.get('city-input');
   date = formData.get('date');
-  console.log(city);
   urlify(city);
   loadingScreen.classList.remove('hidden');
   titleContainer.classList.add('hidden');
@@ -93,14 +89,14 @@ function handleSubmit(event) {
 function urlify(city) {
   city = city.trim().replace(/\s/g, '%20');
   city = city.replace(/,/g,'');
-  console.log(city);
   cityGeocode(city);
 }
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
-    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4',
+    url: `http://localhost:3000/api/geocode/${city}`,
     method: "GET",
+    dataType: 'json',
     success: logSuccess,
     fail: logError
   })
@@ -114,13 +110,11 @@ function logSuccess(data) {
   lon1=geocode.lng;
   latitude = geocode.lat;
   longitude = geocode.lng;
-  console.log('success', data)
-  console.log('logsucces', latitude, longitude);
   antipode(latitude, longitude);
   homeAirport(city1);
 }
 function logError(error) {
-  console.log('error')
+  console.error('error')
 }
 
 function antipode(latitude, longitude) {
@@ -130,22 +124,11 @@ function antipode(latitude, longitude) {
   } else {
     antiLong = longitude - 180;
   }
-  console.log('antipode', antiLat, antiLong);
-  reverseGeocode(antiLat, antiLong);
   boundLat = (antiLat-30);
   boundLong = (antiLong-30);
   boundLat2 = (antiLat+30);
   boundLong2 = (antiLong+30);
   geoNames(boundLat, boundLong, boundLat2, boundLong2)
-}
-
-function reverseGeocode(antiLat, antiLong) {
-  $.ajax({
-    method: "GET",
-    url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+antiLat+","+antiLong+"&"+googleAPIKey,
-    success: nearestAirportSuccess,
-    fail: logError
-  })
 }
 
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
@@ -158,7 +141,6 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
 }
 
 function geoNamesSuccess(data) {
-  console.log(data);
   airportList = data;
   lat2 = parseFloat(airportList.geonames[0].lat);
   lon2 = parseFloat(airportList.geonames[0].lng);
@@ -171,9 +153,6 @@ function airportInfo(airportList) {
   findAirport(searchRequest)
 }
 
-function nearestAirportSuccess (data) {
-  console.log('airport', data);
-}
 var homeCity;
 var homeAirportName;
 var homeCityUnformatted;
@@ -196,13 +175,10 @@ function findHomeAirport(homeCity) {
     }
   }
   $.ajax(settings).done(function (data) {
-    console.log('data', data, 'data.length', data.Places.length);
     homeAirportName = data.Places[0].PlaceName;
-    console.log(homeAirportName);
     if (data.Places.length != 0) {
       homeAirportName = data.Places[0].PlaceId;
     }
-    console.log(homeAirportName)
   });
 }
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
@@ -218,9 +194,7 @@ function findAirport(searchRequest) {
     }
   }
   $.ajax(settings).done(function (data) {
-    console.log('data', data, 'data.length', data.Places.length);
     destinationCity = data.Places[data.Places.length-1].PlaceName;
-    console.log(destinationCity);
     if (data.Places.length != 0) {
       airportName = data.Places[data.Places.length - 1].PlaceId;
     }
@@ -230,7 +204,6 @@ function findAirport(searchRequest) {
 
 function checkEmpty(airportName) {
   if (airportName != undefined) {
-    console.log('airport name', airportName);
     findFlights(airportName);
   } else {
     searchRequest = airportList.geonames[0].countryName;
@@ -250,12 +223,10 @@ function findFlights(airportName) {
     }
   }
   $.ajax(settings).done(function (response) {
-    console.log('yes', response);
     flightQuery = response;
     flightInformation(flightQuery);
   })
     .fail(function (response) {
-      console.log('failed');
       loadingScreen.classList.add('hidden');
       searchFailed.classList.remove('hidden');
     });
@@ -273,7 +244,6 @@ function flightInformation(flightQuery) {
     }
     renderFlightRow(carrierArray, destination, destinationCity, minQuote);
   } else {
-    console.log(flightQuery);
     renderNoFlights(city, destinationCity);
   }
   loadingScreen.classList.add('hidden');
@@ -310,11 +280,25 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
     tbody.removeChild(tbody.lastChild);
   }
   var row = document.createElement('tr');
+  let row2 = document.createElement('tr');
+  let row3 = document.createElement('tr');
+  let row4 = document.createElement('tr');
+  let row5 = document.createElement('tr');
   var tdCarrier = document.createElement('td');
+  const carrierCell = document.createElement('td');
+  carrierCell.textContent = 'carrier:';
   var tdDestination = document.createElement('td');
+  const destinationCell = document.createElement('td');
+  destinationCell.textContent = 'destination:';
   var tdDestinationCity = document.createElement('td');
+  const cityCell = document.createElement('td');
+  cityCell.textContent = 'city:';
   var tdMinQuote = document.createElement('td');
+  const minQuoteCell = document.createElement('td');
+  minQuoteCell.textContent = 'min quote:'
   var tdGoogle = document.createElement('td');
+  const bookNowCell = document.createElement('td');
+  bookNowCell.textContent = 'book now: '
   var tdGoogleLink = document.createElement('a');
   var tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
@@ -330,14 +314,18 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdDestination.textContent = destination;
   tdDestinationCity.textContent = destinationCity;
   tdMinQuote.textContent = minQuote;
-  row.append(tdCarrier, tdDestination, tdDestinationCity, tdMinQuote, tdGoogle);
+  row.append(carrierCell, tdCarrier);
+  row2.append(destinationCell, tdDestination);
+  row3.append(cityCell, tdDestinationCity);
+  row4.append(minQuoteCell, tdMinQuote);
+  row5.append(bookNowCell, tdGoogle)
   distance = calculateDistance();
   distanceRatio = (distance / farthestDistance) * 100;
   distance = Math.round(distance);
   distance = numberWithCommas(distance);
   distanceMiles.textContent = distance + " miles";
   distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
-  tbody.append(row);
+  tbody.append(row, row2, row3, row4, row5);
 }
 
 function calculateDistance() {
