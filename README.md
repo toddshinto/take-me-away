@@ -3,6 +3,8 @@
 
 ![takemeaway](/logo.png)
 
+### [Live Site](https://take-me-away.toddshinto.com)
+
 ## Technologies
 * JavaScript (ES6)
 * CSS3
