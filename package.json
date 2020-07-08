@@ -4,9 +4,9 @@
   "description": "a simple backend relay for hiding keys",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "debug": "nodemon --inspect app.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "debug": "nodemon --inspect index.js"
   },
   "author": "Todd Shinto",
   "license": "MIT",
@@ -25,14 +25,5 @@
     "type": "git",
     "url": "git+https://github.com/toddshinto/api-hackathon/"
   },
-  "keywords": [
-    "secure",
-    "api",
-    "keys"
-  ],
-  "bugs": {
-    "url": "https://github.com/toddshinto/api-hackathon/issues"
-  },
-  "homepage": "https://github.com/toddshinto/api-hackathon#readme",
   "devDependencies": {}
 }
