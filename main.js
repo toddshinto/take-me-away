@@ -94,7 +94,7 @@ function urlify(city) {
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
-    url: `http://localhost:3004/api/geocode/${city}`,
+    url: `/api/geocode/${city}`,
     method: "GET",
     dataType: 'json',
     success: logSuccess,
