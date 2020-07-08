@@ -1,4 +1,4 @@
-require('dotenv/config');
+require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
 const ClientError = require('./client-error');
@@ -9,9 +9,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/geocode', (req, res) => {
-  const city = req.query.city;
-  console.log(req.query.city)
+app.get('/api/geocode/:city', (req, res) => {
+  const city = req.params.city;
+  console.log(req.params.city)
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
     .then(response => response.json())
     .then(data => {
@@ -49,7 +49,8 @@ app.use('/api', (req, res, next) => {
   next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
 });
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   if (err instanceof ClientError) {
     res.status(err.status).json({ error: err.message });
   } else {
