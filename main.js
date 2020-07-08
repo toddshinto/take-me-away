@@ -99,8 +99,9 @@ function urlify(city) {
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
-    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4',
+    url: `http://localhost:3000/api/geocode/${city}`,
     method: "GET",
+    dataType: 'json',
     success: logSuccess,
     fail: logError
   })
@@ -131,21 +132,11 @@ function antipode(latitude, longitude) {
     antiLong = longitude - 180;
   }
   console.log('antipode', antiLat, antiLong);
-  reverseGeocode(antiLat, antiLong);
   boundLat = (antiLat-30);
   boundLong = (antiLong-30);
   boundLat2 = (antiLat+30);
   boundLong2 = (antiLong+30);
   geoNames(boundLat, boundLong, boundLat2, boundLong2)
-}
-
-function reverseGeocode(antiLat, antiLong) {
-  $.ajax({
-    method: "GET",
-    url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+antiLat+","+antiLong+"&"+googleAPIKey,
-    success: nearestAirportSuccess,
-    fail: logError
-  })
 }
 
 function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
