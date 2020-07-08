@@ -1,52 +1,56 @@
-var city1;
-var geocode;
-var latitude;
-var longitude;
-var antiLat;
-var antiLong;
-var boundLat;
-var boundLong;
-var boundLat2;
-var boundLong2;
-var airportName;
-var airportList = [];
-var searchRequest;
-var flightQuery;
-var carrierArray;
-var destination;
-var destinationCity;
-var minQuote;
-var city;
-var date;
-var lat1;
-var lat2;
-var lon1;
-var lon2;
-var farthestDistance = 12450;
-var today = new Date().toISOString().substr(0, 10);
-var tbody = document.querySelector('tbody');
-var tableContainer = document.getElementById('table-container');
-var formContainer = document.getElementById('form-container');
-var input = document.getElementById('city-input');
-var loadingScreen = document.getElementById('loading-screen');
-var titleContainer = document.getElementById('title-container');
-var resetButton = document.getElementById('reset-button');
-var landingPage = document.getElementById('landing-page');
-var getStarted = document.getElementById('get-started');
-var mainContainer = document.getElementById('main-container');
-var searchFailed = document.getElementById('search-failed-container');
-var distanceRatio;
-var distanceWidth = document.getElementById('distance');
-var distanceMiles = document.getElementById('distance-miles');
-var searchFailedButton = document.getElementById('search-failed-btn');
+let city1;
+let geocode;
+let latitude;
+let longitude;
+let antiLat;
+let antiLong;
+let boundLat;
+let boundLong;
+let boundLat2;
+let boundLong2;
+let airportName;
+let airportList = [];
+let searchRequest;
+let flightQuery;
+let carrierArray;
+let destination;
+let destinationCity;
+let minQuote;
+let distance;
+let city;
+let date;
+let lat1;
+let lat2;
+let lon1;
+let lon2;
+let homeCity;
+let homeAirportName;
+let homeCityUnformatted;
+const farthestDistance = 12450;
+let today = new Date().toISOString().substr(0, 10);
+const tbody = document.querySelector('tbody');
+const tableContainer = document.getElementById('table-container');
+const formContainer = document.getElementById('form-container');
+const input = document.getElementById('city-input');
+const loadingScreen = document.getElementById('loading-screen');
+const titleContainer = document.getElementById('title-container');
+const resetButton = document.getElementById('reset-button');
+const landingPage = document.getElementById('landing-page');
+const getStarted = document.getElementById('get-started');
+const mainContainer = document.getElementById('main-container');
+const searchFailed = document.getElementById('search-failed-container');
+let distanceRatio;
+const distanceWidth = document.getElementById('distance');
+const distanceMiles = document.getElementById('distance-miles');
+const searchFailedButton = document.getElementById('search-failed-btn');
 //auto complete cities only
-var options = {
+const options = {
   types: ['(cities)']
 }
 // eslint-disable-next-line no-undef, no-unused-vars
-var autocomplete = new google.maps.places.Autocomplete(input, options);
+const autocomplete = new google.maps.places.Autocomplete(input, options);
 //submit event listener=>urlify=>get geo code
-var citySubmit = document.querySelector('form');
+const citySubmit = document.querySelector('form');
 
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
@@ -77,7 +81,7 @@ function resetPage() {
 
 function handleSubmit(event) {
   event.preventDefault();
-  var formData = new FormData(event.target);
+  const formData = new FormData(event.target);
   city = formData.get('city-input');
   date = formData.get('date');
   urlify(city);
@@ -92,6 +96,7 @@ function urlify(city) {
   // city = city.trim().replace(/\s/g, '%20');
   cityGeocode(city);
 }
+
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
@@ -115,6 +120,7 @@ function logSuccess(data) {
   antipode(latitude, longitude);
   homeAirport(city1);
 }
+
 function logError(error) {
   console.error(error)
 }
@@ -149,6 +155,7 @@ function geoNamesSuccess(data) {
   lon2 = parseFloat(airportList.geonames[0].lng);
   airportInfo(data);
 }
+
 function airportInfo(airportList) {
   searchRequest = airportList.geonames[0].adminName1 + " " + airportList.geonames[0].countryName;
   searchRequest = searchRequest.trim().replace(/\s/g, '%20');
@@ -156,9 +163,6 @@ function airportInfo(airportList) {
   findAirport(searchRequest)
 }
 
-var homeCity;
-var homeAirportName;
-var homeCityUnformatted;
 function homeAirport() {
   homeCity = city1.results[0].formatted_address.split(',');
   homeCityUnformatted = homeCity[0];
@@ -166,8 +170,9 @@ function homeAirport() {
   homeCity = homeCity.trim().replace(/\s/g, '%20');
   findHomeAirport(homeCity);
 }
+
 function findHomeAirport(homeCity) {
-  var settings = {
+  const settings = {
     "async": true,
     "crossDomain": true,
     "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query=" + homeCity,
@@ -184,9 +189,10 @@ function findHomeAirport(homeCity) {
     }
   });
 }
+
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
 function findAirport(searchRequest) {
-  var settings = {
+  const settings = {
     "async": true,
     "crossDomain": true,
     "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query="+searchRequest,
@@ -215,7 +221,7 @@ function checkEmpty(airportName) {
 }
 
 function findFlights(airportName) {
-  var settings = {
+  const settings = {
     "async": true,
     "crossDomain": true,
     "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportName+"/"+airportName+"/"+date,
@@ -253,12 +259,12 @@ function flightInformation(flightQuery) {
   tableContainer.classList.remove('hidden');
   titleContainer.classList.remove('hidden');
 }
-var distance;
+
 function renderNoFlights(city, destinationCity) {
-  var row = document.createElement('tr');
-  var tdTryGoogle = document.createElement('td');
-  var tdTryGoogleLink = document.createElement('a');
-  var tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'. Try Google?');
+  const row = document.createElement('tr');
+  const tdTryGoogle = document.createElement('td');
+  const tdTryGoogleLink = document.createElement('a');
+  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'. Try Google?');
   airportName = airportName.replace('-sky','');
   tdTryGoogleLink.appendChild(tdTryGoogleTextNode);
   date = date.replace(/-/g, ' ')
@@ -276,7 +282,7 @@ function renderNoFlights(city, destinationCity) {
   tbody.append(row);
 }
 function numberWithCommas(num) {
-  let numParts = num.toString().split('.');
+  const numParts = num.toString().split('.');
   numParts[0] = numParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return numParts.join('.');
 }
@@ -285,28 +291,28 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
   }
-  var row = document.createElement('tr');
-  let row2 = document.createElement('tr');
-  let row3 = document.createElement('tr');
-  let row4 = document.createElement('tr');
-  let row5 = document.createElement('tr');
-  var tdCarrier = document.createElement('td');
+  const row = document.createElement('tr');
+  const row2 = document.createElement('tr');
+  const row3 = document.createElement('tr');
+  const row4 = document.createElement('tr');
+  const row5 = document.createElement('tr');
+  const tdCarrier = document.createElement('td');
   const carrierCell = document.createElement('td');
   carrierCell.textContent = 'carrier:';
-  var tdDestination = document.createElement('td');
+  const tdDestination = document.createElement('td');
   const destinationCell = document.createElement('td');
   destinationCell.textContent = 'destination:';
-  var tdDestinationCity = document.createElement('td');
+  const tdDestinationCity = document.createElement('td');
   const cityCell = document.createElement('td');
   cityCell.textContent = 'city:';
-  var tdMinQuote = document.createElement('td');
+  const tdMinQuote = document.createElement('td');
   const minQuoteCell = document.createElement('td');
   minQuoteCell.textContent = 'min quote:'
-  var tdGoogle = document.createElement('td');
+  const tdGoogle = document.createElement('td');
   const bookNowCell = document.createElement('td');
   bookNowCell.textContent = 'book now: '
-  var tdGoogleLink = document.createElement('a');
-  var tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
+  const tdGoogleLink = document.createElement('a');
+  const tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
   date = date.replace(/-/g, ' ');
   airportName = airportName.replace('-sky', '');
@@ -340,12 +346,10 @@ function calculateDistance() {
   const φ2 = lat2 * Math.PI / 180;
   const Δφ = (lat2 - lat1) * Math.PI / 180;
   const Δλ = (lon2 - lon1) * Math.PI / 180;
-
   const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
     Math.cos(φ1) * Math.cos(φ2) *
     Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
   const d = (R * c)/1609;
   return d; // in metres
 }
