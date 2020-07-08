@@ -2,12 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
 const ClientError = require('./client-error');
-const cors = require('cors');
+const path = require('path')
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(express.static(path.join(__dirname, 'public/')));
 
 app.get('/api/geocode/:city', (req, res) => {
   const city = req.params.city;
@@ -42,8 +42,6 @@ app.get('/api/geonames/:lat1/:lon1/:lat2/:lon2', (req, res) => {
 app.get('/api/health-check', (req, res) => {
   return res.status(200).json({ message: 'successful health check' });
 });
-
-app.get('/', (req, res) => res.send('Hello World!'));
 
 app.use('/api', (req, res, next) => {
   next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
