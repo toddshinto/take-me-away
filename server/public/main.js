@@ -43,6 +43,7 @@ var searchFailedButton = document.getElementById('search-failed-btn');
 var options = {
   types: ['(cities)']
 }
+// eslint-disable-next-line no-undef, no-unused-vars
 var autocomplete = new google.maps.places.Autocomplete(input, options);
 //submit event listener=>urlify=>get geo code
 var citySubmit = document.querySelector('form');
@@ -87,8 +88,8 @@ function handleSubmit(event) {
 }
 
 function urlify(city) {
+  city = city.replace(/,/g, '');
   // city = city.trim().replace(/\s/g, '%20');
-  // city = city.replace(/,/g,'');
   cityGeocode(city);
 }
 //returns geocode information
@@ -106,7 +107,9 @@ function cityGeocode(city) {
 
 //retrieves lat/long from returned geocode data
 function logSuccess(data) {
-  city1 = JSON.parse(data);
+  city1 = data;
+  console.log(data);
+  console.log(city1);
   geocode = city1.results[0].geometry.location;
   lat1=geocode.lat;
   lon1=geocode.lng;
@@ -116,7 +119,7 @@ function logSuccess(data) {
   homeAirport(city1);
 }
 function logError(error) {
-  console.error('error')
+  console.error(error)
 }
 
 function antipode(latitude, longitude) {
@@ -229,7 +232,7 @@ function findFlights(airportName) {
     flightQuery = response;
     flightInformation(flightQuery);
   })
-    .fail(function (response) {
+    .fail(() => {
       loadingScreen.classList.add('hidden');
       searchFailed.classList.remove('hidden');
     });
@@ -275,9 +278,12 @@ function renderNoFlights(city, destinationCity) {
   row.append(tdTryGoogle);
   tbody.append(row);
 }
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+function numberWithCommas(num) {
+  let numParts = num.toString().split('.');
+  numParts[0] = numParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return numParts.join('.');
 }
+
 function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
