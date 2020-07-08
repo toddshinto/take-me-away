@@ -87,16 +87,18 @@ function handleSubmit(event) {
 }
 
 function urlify(city) {
-  city = city.trim().replace(/\s/g, '%20');
-  city = city.replace(/,/g,'');
+  // city = city.trim().replace(/\s/g, '%20');
+  // city = city.replace(/,/g,'');
   cityGeocode(city);
 }
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
-    url: `/api/geocode/${city}`,
+    url: `/api/geocode`,
     method: "GET",
-    crossDomain: true,
+    data: {
+      city: city
+    },
     success: logSuccess,
     fail: logError
   })

@@ -9,8 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/geocode/:city', (req, res) => {
-  const city = req.params.city;
+app.get('/api/geocode', (req, res) => {
+  const city = req.query.city;
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
     .then(result => result.json())
     .then(data => {
