@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Take Me Away</title>
+</head>
+<body>
+  <div id="landing-page" class="landing-page">
+    <div id="landing-container" class="landing-container">
+      SEND YOUR
+      <div id=flip>
+        <div>
+          <div>FAMILY</div>
+        </div>
+        <div>
+          <div>FRIENDS</div>
+        </div>
+        <div>
+          <div>SELF</div>
+        </div>
+      </div>
+      Away
+
+    <button type="button" class="get-started" id="get-started">Start</button>
+    </div>
+  </div>
+  <div id="search-failed-container" class="landing-page search-failed hidden">
+    <div id="search-failed" class="landing-container">
+      <div class="search-failed">Search failed.</div>
+      <button type="button" id="search-failed-btn" class="get-started search-failed-try">Try Again?</button>
+    </div>
+  </div>
+  <div class="loading-screen hidden" id="loading-screen">
+    <div class="loading loading--plane" title="Loading">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.5 104">
+        <path
+          d="M97.7 41.5c16.3 0 16.3 21-.2 21H66.7l-26 38H29.2l14.1-38h-23l-7.8 10h-9L8.2 52 3.5 31.5h9l7.8 10h23.1l-14.1-38h11.4l26 38h31z"
+          fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+          stroke-miterlimit="10" stroke="#000" stroke-width="4" />
+      </svg>
+    </div>
+  </div>
+  <div class="main-container hidden" id="main-container">
+    <div class="title-container" id="title-container">
+      <h1>Take You Away</h1>
+    </div>
+    <div class="form-container" id="form-container">
+      <form class="city-form">
+        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Closest Major City" required>
+        <input type="date" class="date" id="date" name="date" required>
+        <button type="submit" class="submit-button">submit</button>
+      </form>
+    </div>
+    <div class="table-container row hidden" id="table-container">
+      <table class="table table-striped table-bordered col" id="table">
+        <tbody></tbody>
+      </table>
+      <div class="distance-calculator">
+        <div class="distance" id="distance">
+          Distance: <div id="distance-miles"></div>
+        </div>
+        <div class="possible-distance">12,450 mi.</div>
+      </div>
+      <div class="reset-button-container">
+        <button class="reset-button" id="reset-button" type="button">Try Again?</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANoXq3hQzS5iIGDFtR8NkFD2dn1hSB9H4&libraries=places"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
