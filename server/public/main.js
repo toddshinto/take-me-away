@@ -96,7 +96,7 @@ function cityGeocode(city) {
   $.ajax({
     url: `/api/geocode/${city}`,
     method: "GET",
-    dataType: 'json',
+    crossDomain: true,
     success: logSuccess,
     fail: logError
   })
