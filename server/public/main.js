@@ -50,7 +50,15 @@ let options = {
 }
 
 // eslint-disable-next-line no-undef, no-unused-vars
-let autocomplete = new google.maps.places.Autocomplete(input, options);
+let inputSrc = document.createElement('script');
+
+inputSrc.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=${browserKey}&libraries=places`)
+document.body.appendChild(inputSrc);
+inputSrc.addEventListener('load', scriptLoaded, false)
+
+function scriptLoaded() {
+  var autocomplete = new google.maps.places.Autocomplete(input, options);
+}
 //submit event listener=>urlify=>get geo code
 const citySubmit = document.querySelector('form');
 
@@ -112,8 +120,6 @@ function cityGeocode(city) {
 //retrieves lat/long from returned geocode data
 function logSuccess(data) {
   city1 = data;
-  console.log(data);
-  console.log(city1);
   geocode = city1.results[0].geometry.location;
   lat1=geocode.lat;
   lon1=geocode.lng;
@@ -159,7 +165,11 @@ function geoNamesSuccess(data) {
 }
 
 function airportInfo(airportList) {
-  searchRequest = airportList.geonames[0].adminName1 + " " + airportList.geonames[0].countryName;
+  if (!airportList.geonames[0].adminName1.includes('.')) {
+    searchRequest = airportList.geonames[0].adminName1 + " " + airportList.geonames[0].countryName;
+  } else {
+    searchRequest = airportList.geonames[0].countryName
+  }
   searchRequest = searchRequest.trim().replace(/\s/g, '%20');
   searchRequest = searchRequest.replace(/,/g, '');
   findAirport(searchRequest)
@@ -217,7 +227,7 @@ function checkEmpty(airportName) {
   if (airportName != undefined) {
     findFlights(airportName);
   } else {
-    searchRequest = airportList.geonames[0].countryName;
+    searchRequest = airportList.geonames[0].CountryName;
     findAirport(searchRequest);
   }
 }
@@ -266,19 +276,25 @@ function renderNoFlights(city, destinationCity) {
   const row = document.createElement('tr');
   const tdTryGoogle = document.createElement('td');
   const tdTryGoogleLink = document.createElement('a');
-  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'. Try Google?');
+  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'.');
+  const tdTryGoogleBtn = document.createElement('button');
+  const tdTryGoogleBtnText = document.createTextNode('Try Google?');
+  tdTryGoogle.className = 'no-results';
+  tdTryGoogleBtn.append(tdTryGoogleBtnText);
+  tdTryGoogleBtn.className = 'submit-button';
   airportName = airportName.replace('-sky','');
-  tdTryGoogleLink.appendChild(tdTryGoogleTextNode);
+  tdTryGoogleLink.appendChild(tdTryGoogleBtn);
   date = date.replace(/-/g, ' ')
   tdTryGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" " + date;
   tdTryGoogleLink.target = "_blank";
+  tdTryGoogle.append(tdTryGoogleTextNode);
   tdTryGoogle.append(tdTryGoogleLink);
   tdTryGoogle.colSpan = 5;
   distance = calculateDistance();
   distanceRatio = (distance/farthestDistance)*100;
   distance = Math.round(distance);
   distance = numberWithCommas(distance);
-  distanceMiles.textContent = distance+" miles";
+  distanceMiles.textContent = distance+" mi";
   distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   row.append(tdTryGoogle);
   tbody.append(row);
@@ -298,6 +314,7 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   const row3 = document.createElement('tr');
   const row4 = document.createElement('tr');
   const row5 = document.createElement('tr');
+  row5.className='click';
   const tdCarrier = document.createElement('td');
   const carrierCell = document.createElement('td');
   carrierCell.textContent = 'carrier:';
@@ -312,7 +329,7 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   minQuoteCell.textContent = 'min quote:'
   const tdGoogle = document.createElement('td');
   const bookNowCell = document.createElement('td');
-  bookNowCell.textContent = 'book now: '
+  bookNowCell.textContent = 'book now: ';
   const tdGoogleLink = document.createElement('a');
   const tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
@@ -343,8 +360,8 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
 }
 
 function calculateDistance() {
-  const R = 6371e3; // metres
-  const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+  const R = 6371e3;
+  const φ1 = lat1 * Math.PI / 180;
   const φ2 = lat2 * Math.PI / 180;
   const Δφ = (lat2 - lat1) * Math.PI / 180;
   const Δλ = (lon2 - lon1) * Math.PI / 180;
@@ -353,5 +370,5 @@ function calculateDistance() {
     Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = (R * c)/1609;
-  return d; // in metres
+  return d;
 }

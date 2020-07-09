@@ -11,11 +11,14 @@ app.use(express.static(path.join(__dirname, 'public/')));
 
 app.get('/api/geocode/:city', (req, res) => {
   const city = req.params.city;
-  console.log(req.params.city)
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
     .then(response => response.json())
     .then(data => {
-      return res.status(200).send(data);
+      if (data.results[0].geometry) {
+        return res.status(200).send(data);
+      } else {
+        return res.status(500).json({error: 'unexpected error'})
+      }
     })
     .catch(err => {
       res.status(500).json({ message: 'unexpected error' });
