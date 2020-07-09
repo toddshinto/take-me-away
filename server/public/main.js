@@ -27,7 +27,7 @@ let homeCity;
 let homeAirportName;
 let homeCityUnformatted;
 const farthestDistance = 12450;
-let today = new Date().toISOString().substr(0, 10);
+let today = new Date().setDate(tomorrow.getDate() + 1).toISOString().substr(0, 10);
 const tbody = document.querySelector('tbody');
 const tableContainer = document.getElementById('table-container');
 const formContainer = document.getElementById('form-container');
