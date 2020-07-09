@@ -34,15 +34,13 @@
 `git clone https://github.com/toddshinto/take-me-away.git`
 #### 2. Install dependencies
 `npm install`
-#### 3. Copy `.env.example` to `.env`:
-`cp .env.example .env`
-#### 4. Open the new `.env` file and insert your server key:
+#### 3. Rename `.env.example` to `.env` and insert your server key:
 `GOOGLE_API_KEY=AAAUUUGGGHHH1111`
-#### 5. Copy `browser-key-example.js` to `browser-key.js` and insert your browser key:
+#### 4. Rename `server/public/browser-key-example.js` to `browser-key.js` and insert your browser key:
 `const browserKey=KKKKOOOOBBBBEEEE2222`
-#### 6. Run the server
+#### 5. Run the server
 `node index.js`
-#### 7. Visit localhost:3001 in browser
+#### 6. Visit localhost:3001 in browser
 ![start-screen](/start-screen-takeaway.gif)
 
 ### Support
