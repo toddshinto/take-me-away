@@ -31,7 +31,7 @@ let today = new Date().toISOString().substr(0, 10);
 const tbody = document.querySelector('tbody');
 const tableContainer = document.getElementById('table-container');
 const formContainer = document.getElementById('form-container');
-const input = document.getElementById('city-input');
+let input = document.getElementById('city-input');
 const loadingScreen = document.getElementById('loading-screen');
 const titleContainer = document.getElementById('title-container');
 const resetButton = document.getElementById('reset-button');
@@ -48,7 +48,7 @@ const options = {
   types: ['(cities)']
 }
 // eslint-disable-next-line no-undef, no-unused-vars
-const autocomplete = new google.maps.places.Autocomplete(input, options);
+let autocomplete = new google.maps.places.Autocomplete(input, options);
 //submit event listener=>urlify=>get geo code
 const citySubmit = document.querySelector('form');
 
