@@ -19,7 +19,7 @@
 * User can input any major city
 * Antipode is calculated based on major city
 * User is given the cheapest flight as returned by Skyscanner
-  * *The Skyscanner API returns only cached results as of May 2020
+  * The Skyscanner API returns only cached results as of May 2020
 * User can view distance to destination relative to maximum distance (12,450 miles)
 
 ## Planned Features
