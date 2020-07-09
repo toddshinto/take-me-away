@@ -44,7 +44,7 @@ const distanceWidth = document.getElementById('distance');
 const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
 //auto complete cities only
-const options = {
+let options = {
   types: ['(cities)']
 }
 // eslint-disable-next-line no-undef, no-unused-vars
