@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const inputSrc = document.createElement('script');
 const mainJs = document.createElement('script');
 
