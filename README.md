@@ -1,7 +1,10 @@
 # take-me-away
 > An application created during a 48-hour hackathon to calculate the farthest possible destination from any major city and return a link to purchase a one-way plane ticket.
 
-![takemeaway](/logo.png)
+[![livesite][1]][2]
+
+[1]:  /logo.png
+[2]:  https://take-me-away.toddshinto.com "Redirect to homepage"
 
 ### [Live Site](https://take-me-away.toddshinto.com)
 
