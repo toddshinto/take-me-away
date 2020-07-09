@@ -43,10 +43,12 @@ let distanceRatio;
 const distanceWidth = document.getElementById('distance');
 const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
+
 //auto complete cities only
 let options = {
   types: ['(cities)']
 }
+
 // eslint-disable-next-line no-undef, no-unused-vars
 let autocomplete = new google.maps.places.Autocomplete(input, options);
 //submit event listener=>urlify=>get geo code
