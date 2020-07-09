@@ -1,6 +1,6 @@
 # take-me-away
-#### An application created during a 48-hour hackathon to calculate the farthest possible destination from any major city.
-#### Returns a link to purchase a one-way plane ticket.
+* An application created during a 48-hour hackathon to calculate the farthest possible destination from any major city.
+* Returns a link to purchase a one-way plane ticket.
 
 [![livesite][1]][2]
 
