@@ -45,6 +45,8 @@ let distanceRatio;
 const distanceWidth = document.getElementById('distance');
 const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
+const toStart = document.getElementById('to-start');
+const instPage = document.getElementById('instructions-page')
 
 //auto complete cities only
 let options = {
@@ -64,11 +66,17 @@ function scriptLoaded() {
 //submit event listener=>urlify=>get geo code
 const citySubmit = document.querySelector('form');
 
+toStart.addEventListener('click', toStartPage)
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
 getStarted.addEventListener('click', startPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
+
+function toStartPage() {
+  instPage.classList.add('hidden');
+  landingPage.classList.remove('hidden')
+}
 
 function tryAgainPage() {
   searchFailed.classList.add('hidden');
