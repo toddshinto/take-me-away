@@ -32,8 +32,6 @@
 ## Instructions
 #### You will need:
 * NodeJS
-* git
-* This repo: `https://github.com/toddshinto/take-me-away.git`
 #### 1. Clone the repo
 `git clone https://github.com/toddshinto/take-me-away.git`
 #### 2. Install dependencies
