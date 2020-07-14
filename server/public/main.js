@@ -214,6 +214,13 @@ function findAirport(searchRequest) {
     }
   }
   $.ajax(settings).done(function (data) {
+    if (data.Places.length < 1 && typeof searchRequest === 'string' ) {
+      const searchRequestArr = searchRequest.split('%20')
+      findAirport(searchRequestArr[searchRequestArr.length-1])
+    } else if (data.Places.length < 1 && typeof searchRequest !== 'string' ) {
+      loadingScreen.classList.add('hidden');
+      searchFailed.classList.remove('hidden');
+    }
     destinationCity = `${data.Places[data.Places.length-1].PlaceName}, ${data.Places[data.Places.length-1].CountryName}`;
     if (data.Places.length !== 0) {
       airportName = data.Places[data.Places.length - 1].PlaceId;
@@ -223,7 +230,7 @@ function findAirport(searchRequest) {
 }
 
 function checkEmpty(airportName) {
-  if (airportName != undefined) {
+  if (airportName !== undefined) {
     findFlights(airportName);
   } else {
     searchRequest = airportList.geonames[0].CountryName;
