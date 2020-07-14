@@ -6,13 +6,16 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/favicon.png">
   <script src="browser-key.js"></script>
   <title>Take Me Away</title>
 </head>
 <body>
   <div id="instructions-page" class="landing-page">
+    <div class="title-container" id="title-container">
+      <h1>Take You Away</h1>
+    </div>
     <div id="instructions-container" class="landing-container">
-      HERE YOU CAN:
       <div id=flip-start>
         <div>
           <div>4. TRAVEL</div>
@@ -21,32 +24,13 @@
           <div>3. FIND A FLIGHT</div>
         </div>
         <div>
-          <div>2. GET THE FARTHEST CITY</div>
+          <div>2. FIND THE FARTHEST CITY</div>
         </div>
         <div>
-          <div>1. ENTER YOUR LOCATION</div>
+          <div>1. ENTER ANY LOCATION</div>
         </div>
       </div>
       <button type="button" class="get-started" id="to-start">Continue</button>
-    </div>
-  </div>
-  <div id="landing-page" class="landing-page hidden">
-    <div id="landing-container" class="landing-container">
-      SEND YOUR
-      <div id=flip>
-        <div>
-          <div>FAMILY</div>
-        </div>
-        <div>
-          <div>FRIENDS</div>
-        </div>
-        <div>
-          <div>SELF</div>
-        </div>
-      </div>
-      Away
-
-    <button type="button" class="get-started" id="get-started">Start</button>
     </div>
   </div>
   <div id="search-failed-container" class="landing-page search-failed hidden">
@@ -71,7 +55,7 @@
     </div>
     <div class="form-container" id="form-container">
       <form class="city-form">
-        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Closest Major City" required>
+        <input type="text" class="city-input" name="city-input" id="city-input" placeholder="Enter Any City" required>
         <input type="date" class="date" id="date" name="date" required>
         <button type="submit" class="submit-button">submit</button>
       </form>
@@ -87,10 +71,11 @@
         <div class="possible-distance">12,450 mi.</div>
       </div>
       <div class="reset-button-container">
-        <button class="reset-button" id="reset-button" type="button">Try Again?</button>
+        <button class="try-button" id="reset-button" type="button">Try Again?</button>
       </div>
     </div>
   </div>
+  <script src="airports.js"></script>
   <script src="main.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>

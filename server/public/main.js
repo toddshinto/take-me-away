@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 let city1;
 let geocode;
 let latitude;
@@ -23,9 +24,8 @@ let lat1;
 let lat2;
 let lon1;
 let lon2;
-let homeCity;
 let homeAirportName;
-let homeCityUnformatted;
+let homeAirportCode;
 const farthestDistance = 12450;
 let today = new Date();
 today.setDate(today.getDate() + 1);
@@ -38,7 +38,6 @@ const loadingScreen = document.getElementById('loading-screen');
 const titleContainer = document.getElementById('title-container');
 const resetButton = document.getElementById('reset-button');
 const landingPage = document.getElementById('landing-page');
-const getStarted = document.getElementById('get-started');
 const mainContainer = document.getElementById('main-container');
 const searchFailed = document.getElementById('search-failed-container');
 let distanceRatio;
@@ -70,23 +69,17 @@ toStart.addEventListener('click', toStartPage)
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
-getStarted.addEventListener('click', startPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
 
 function toStartPage() {
   instPage.classList.add('hidden');
-  landingPage.classList.remove('hidden')
+  mainContainer.classList.remove('hidden');
 }
 
 function tryAgainPage() {
   searchFailed.classList.add('hidden');
   mainContainer.classList.remove('hidden');
   resetPage();
-}
-
-function startPage() {
-  landingPage.classList.add('hidden');
-  mainContainer.classList.remove('hidden');
 }
 
 function resetPage() {
@@ -112,6 +105,7 @@ function handleSubmit(event) {
 }
 
 function urlify(city) {
+  homeCityUnformatted = city;
   city = city.replace(/,/g, '');
   // city = city.trim().replace(/\s/g, '%20');
   cityGeocode(city);
@@ -136,7 +130,29 @@ function logSuccess(data) {
   latitude = geocode.lat;
   longitude = geocode.lng;
   antipode(latitude, longitude);
-  homeAirport(city1);
+  // homeAirport(city1);
+  findHomeAirport(latitude, longitude);
+}
+
+function findHomeAirport(lat, lng) {
+  let closest = airports[0];
+  let airportDistance = Infinity;
+  for (let i = 0; i < airports.length; i++) {
+    const radLat = Math.PI * lat / 180;
+    const radAirLat = Math.PI * airports[i].latitude_deg / 180;
+    const theta = lng - airports[i].longitude_deg;
+    const radTheta = Math.PI * theta / 180;
+    let distance = Math.sin(radLat) * Math.sin(radAirLat) + Math.cos(radLat) * Math.cos(radAirLat) * Math.cos(radTheta);
+    distance = Math.acos(distance);
+    distance = distance * 180 / Math.PI;
+    distance = distance * 60 * 11515;
+    if (distance < airportDistance) {
+      closest = airports[i];
+      airportDistance = distance;
+    }
+  }
+  homeAirportCode = closest.iata_code;
+  homeAirportName = closest.name;
 }
 
 function logError(error) {
@@ -185,33 +201,6 @@ function airportInfo(airportList) {
   findAirport(searchRequest)
 }
 
-function homeAirport() {
-  homeCity = city1.results[0].formatted_address.split(',');
-  homeCityUnformatted = homeCity[0];
-  homeCity = homeCity[0];
-  homeCity = homeCity.trim().replace(/\s/g, '%20');
-  findHomeAirport(homeCity);
-}
-
-function findHomeAirport(homeCity) {
-  const settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query=" + homeCity,
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-    }
-  }
-  $.ajax(settings).done(function (data) {
-    homeAirportName = data.Places[0].PlaceName;
-    if (data.Places.length != 0) {
-      homeAirportName = data.Places[0].PlaceId;
-    }
-  });
-}
-
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
 function findAirport(searchRequest) {
   const settings = {
@@ -221,12 +210,12 @@ function findAirport(searchRequest) {
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+      "x-rapidapi-key": rapidAPIKey
     }
   }
   $.ajax(settings).done(function (data) {
-    destinationCity = data.Places[data.Places.length-1].PlaceName;
-    if (data.Places.length != 0) {
+    destinationCity = `${data.Places[data.Places.length-1].PlaceName}, ${data.Places[data.Places.length-1].CountryName}`;
+    if (data.Places.length !== 0) {
       airportName = data.Places[data.Places.length - 1].PlaceId;
     }
     checkEmpty(airportName);
@@ -246,11 +235,11 @@ function findFlights(airportName) {
   const settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportName+"/"+airportName+"/"+date,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportCode+"/"+airportName+"/"+date,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+      "x-rapidapi-key": rapidAPIKey
     }
   }
   $.ajax(settings).done(function (response) {
@@ -264,9 +253,9 @@ function findFlights(airportName) {
 }
 
 function flightInformation(flightQuery) {
-  if (flightQuery.Carriers.length != 0){
+  if (flightQuery.Carriers.length !== 0){
     carrierArray = flightQuery.Carriers;
-    destination = flightQuery.Places[1].Name;
+    destination = `${flightQuery.Places[1].Name}, ${flightQuery.Places[1].CountryName}`;
     destinationCity = flightQuery.Places[1].CityName;
     if (flightQuery.Quotes.length > 0) {
       minQuote = "$"+flightQuery.Quotes[0].MinPrice;
@@ -286,7 +275,7 @@ function renderNoFlights(city, destinationCity) {
   const row = document.createElement('tr');
   const tdTryGoogle = document.createElement('td');
   const tdTryGoogleLink = document.createElement('a');
-  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'.');
+  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeAirportName+ ' to '+destinationCity+'.');
   const tdTryGoogleBtn = document.createElement('button');
   const tdTryGoogleBtnText = document.createTextNode('Try Google?');
   tdTryGoogle.className = 'no-results';
@@ -319,54 +308,62 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
   }
-  const row = document.createElement('tr');
-  const row2 = document.createElement('tr');
-  const row3 = document.createElement('tr');
-  const row4 = document.createElement('tr');
-  const row5 = document.createElement('tr');
-  row5.className='click';
-  const tdCarrier = document.createElement('td');
-  const carrierCell = document.createElement('td');
-  carrierCell.textContent = 'carrier:';
-  const tdDestination = document.createElement('td');
-  const destinationCell = document.createElement('td');
-  destinationCell.textContent = 'destination:';
-  const tdDestinationCity = document.createElement('td');
-  const cityCell = document.createElement('td');
-  cityCell.textContent = 'city:';
-  const tdMinQuote = document.createElement('td');
-  const minQuoteCell = document.createElement('td');
-  minQuoteCell.textContent = 'min quote:'
+  const dataCells = [carrierArray, destination, destinationCity, minQuote]
+  const buttonRow = document.createElement('tr');
+  const fromRow = document.createElement('tr');
+  const fromCell = document.createElement('td');
+  fromCell.setAttribute('colspan', 2);
+  fromCell.textContent = `From ${homeAirportName}`
+  fromRow.append(fromCell)
+  tbody.append(fromRow)
   const tdGoogle = document.createElement('td');
+  tdGoogle.className = 'clickable-cell';
   const bookNowCell = document.createElement('td');
-  bookNowCell.textContent = 'book now: ';
+  bookNowCell.textContent = 'book now';
   const tdGoogleLink = document.createElement('a');
   const tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
   date = date.replace(/-/g, ' ');
   airportName = airportName.replace('-sky', '');
-  homeAirportName = homeAirportName.replace('-sky', '');
   date = date.replace(/\s/g, '');
   date = date.substring(2);
-  tdGoogleLink.href = "https://www.skyscanner.com/transport/flights/"+homeAirportName+"/"+airportName+"/"+date+"/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home";
+  tdGoogleLink.href = `location.href=https://www.skyscanner.com/transport/flights/${homeAirportName}/${airportName}/${date} + "/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home`;
   tdGoogleLink.target = "_blank";
   tdGoogle.append(tdGoogleLink);
-  tdCarrier.textContent = carrierArray[0].Name;
-  tdDestination.textContent = destination;
-  tdDestinationCity.textContent = destinationCity;
-  tdMinQuote.textContent = minQuote;
-  row.append(carrierCell, tdCarrier);
-  row2.append(destinationCell, tdDestination);
-  row3.append(cityCell, tdDestinationCity);
-  row4.append(minQuoteCell, tdMinQuote);
-  row5.append(bookNowCell, tdGoogle)
+  for (let i = 0; i < 4; i++) {
+    const row = document.createElement('tr');
+    const title = document.createElement('td');
+    const dataEntry = document.createElement('td');
+    switch (i) {
+      case 0:
+        title.textContent = 'Carrier:'
+        break;
+      case 1:
+        title.textContent = 'Destination:'
+        break;
+      case 2:
+        title.textContent = 'City:'
+        break;
+      case 3:
+        title.textContent = 'Min Quote:'
+        break;
+    }
+    if (i === 0) {
+      dataEntry.textContent = dataCells[0][0].Name;
+    } else {
+      dataEntry.textContent = dataCells[i];
+    }
+    row.append(title, dataEntry);
+    tbody.append(row);
+  }
+  buttonRow.append(bookNowCell, tdGoogle)
   distance = calculateDistance();
   distanceRatio = (distance / farthestDistance) * 100;
   distance = Math.round(distance);
   distance = numberWithCommas(distance);
   distanceMiles.textContent = distance + " miles";
   distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
-  tbody.append(row, row2, row3, row4, row5);
+  tbody.append(buttonRow);
 }
 
 function calculateDistance() {
