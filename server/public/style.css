@@ -82,7 +82,7 @@ h1 {
   font-size: 24px;
 }
 
-.submit-button, .reset-button, .get-started {
+.submit-button, .reset-button, .get-started, .try-button {
   font-family: heritageregular;
   border: none;
   color: rgb(46, 175, 222);
@@ -104,6 +104,11 @@ h1 {
   box-shadow: 2px 2px 2px rgb(46, 175, 222);
   transition: .3s;
 }
+
+.try-button {
+  font-family: voster_typefaceregular;
+  padding-top: 0;
+}
 .submit-button {
   font-size: 38px;
 }
@@ -114,6 +119,11 @@ h1 {
 .reset-button:hover, .get-started:hover, .submit-button:hover {
   box-shadow: 0 0 3px rgb(46, 175, 222);
   transition: .3s;
+}
+
+.clickable-cell {
+  background-color: rgba(46, 175, 222, .78);
+  transition: all .3s ease-in-out;
 }
 
 body {
@@ -308,7 +318,7 @@ a:hover {
 }
 
 @keyframes show-start {
-  0% {margin-top:-390px;}
+  0% {margin-top:-380px;}
   5% {margin-top:-270px;}
   24% {margin-top:-270px;}
   28% {margin-top:-175px;}
@@ -365,4 +375,9 @@ a:hover {
 
 .hidden {
   display: none;
+}
+
+.clickable-cell:hover {
+  color:  rgba(46, 175, 222, .78);
+  background-color: white;
 }
