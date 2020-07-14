@@ -112,6 +112,7 @@ function handleSubmit(event) {
 }
 
 function urlify(city) {
+  homeCityUnformatted = city;
   city = city.replace(/,/g, '');
   // city = city.trim().replace(/\s/g, '%20');
   cityGeocode(city);
@@ -136,7 +137,28 @@ function logSuccess(data) {
   latitude = geocode.lat;
   longitude = geocode.lng;
   antipode(latitude, longitude);
-  homeAirport(city1);
+  // homeAirport(city1);
+  findHomeAirport(latitude, longitude);
+}
+
+function findHomeAirport(lat, lng) {
+  let closest = airports[0];
+  let airportDistance = Infinity;
+  for (let i = 0; i < airports.length; i++) {
+    const radLat = Math.PI * lat / 180;
+    const radAirLat = Math.PI * airports[i].latitude_deg / 180;
+    const theta = lng - airports[i].longitude_deg;
+    const radTheta = Math.PI * theta / 180;
+    let distance = Math.sin(radLat) * Math.sin(radAirLat) + Math.cos(radLat) * Math.cos(radAirLat) * Math.cos(radTheta);
+    distance = Math.acos(distance);
+    distance = distance * 180 / Math.PI;
+    distance = distance * 60 * 11515;
+    if (distance < airportDistance) {
+      closest = airports[i];
+      airportDistance = distance;
+    }
+  }
+  homeAirportName = closest.iata_code;
 }
 
 function logError(error) {
@@ -183,33 +205,6 @@ function airportInfo(airportList) {
   searchRequest = searchRequest.trim().replace(/\s/g, '%20');
   searchRequest = searchRequest.replace(/,/g, '');
   findAirport(searchRequest)
-}
-
-function homeAirport() {
-  homeCity = city1.results[0].formatted_address.split(',');
-  homeCityUnformatted = homeCity[0];
-  homeCity = homeCity[0];
-  homeCity = homeCity.trim().replace(/\s/g, '%20');
-  findHomeAirport(homeCity);
-}
-
-function findHomeAirport(homeCity) {
-  const settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/US/USD/en-US/?query=" + homeCity,
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
-    }
-  }
-  $.ajax(settings).done(function (data) {
-    homeAirportName = data.Places[0].PlaceName;
-    if (data.Places.length != 0) {
-      homeAirportName = data.Places[0].PlaceId;
-    }
-  });
 }
 
 //finds airport from list using adminname and countryname, if no result tries again using only countryname
