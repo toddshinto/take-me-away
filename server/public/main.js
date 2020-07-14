@@ -158,7 +158,9 @@ function findHomeAirport(lat, lng) {
       airportDistance = distance;
     }
   }
-  homeAirportName = closest.iata_code;
+  console.log(closest.iata_code);
+  homeAirportCode = closest.iata_code;
+  homeAirportName = closest.name;
 }
 
 function logError(error) {
@@ -241,7 +243,7 @@ function findFlights(airportName) {
   const settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportName+"/"+airportName+"/"+date,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportCode+"/"+airportName+"/"+date,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
@@ -281,7 +283,7 @@ function renderNoFlights(city, destinationCity) {
   const row = document.createElement('tr');
   const tdTryGoogle = document.createElement('td');
   const tdTryGoogleLink = document.createElement('a');
-  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeCityUnformatted+ ' to '+destinationCity+'.');
+  const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeAirportName+ ' to '+destinationCity+'.');
   const tdTryGoogleBtn = document.createElement('button');
   const tdTryGoogleBtnText = document.createTextNode('Try Google?');
   tdTryGoogle.className = 'no-results';
@@ -340,7 +342,6 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
   date = date.replace(/-/g, ' ');
   airportName = airportName.replace('-sky', '');
-  homeAirportName = homeAirportName.replace('-sky', '');
   date = date.replace(/\s/g, '');
   date = date.substring(2);
   tdGoogleLink.href = "https://www.skyscanner.com/transport/flights/"+homeAirportName+"/"+airportName+"/"+date+"/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home";
