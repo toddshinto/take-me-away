@@ -47,6 +47,7 @@
 #### 6. Visit localhost:3001 in browser
 ![start-screen](/start-screen-takeaway.gif)
 
+
 ### Support
 Reach out to me at one of these places!
 * Website at [toddshinto.com](https://toddshinto.com)
