@@ -240,7 +240,7 @@ a:hover {
   border-radius: 10px;
 }
 
-.landing-container {
+.landing-container, .search-failed-container {
   font-family: voster_typefaceregular;
   color:rgba(46, 175, 222, .8);
   text-transform: uppercase;
@@ -254,6 +254,11 @@ a:hover {
   justify-content: space-evenly;
   top: 100px;
   border-radius: 10px;
+}
+
+.search-failed-container {
+  background-color: rgba(255, 255, 255, .6);
+  text-shadow: 1px 1px 1px white;
 }
 
 .get-started {
