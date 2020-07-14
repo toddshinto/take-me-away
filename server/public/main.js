@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 let city1;
 let geocode;
 let latitude;
@@ -157,7 +158,6 @@ function findHomeAirport(lat, lng) {
       airportDistance = distance;
     }
   }
-  console.log(closest.iata_code);
   homeAirportCode = closest.iata_code;
   homeAirportName = closest.name;
 }
@@ -217,11 +217,10 @@ function findAirport(searchRequest) {
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+      "x-rapidapi-key": rapidAPIKey
     }
   }
   $.ajax(settings).done(function (data) {
-    console.log(data);
     destinationCity = `${data.Places[data.Places.length-1].PlaceName}, ${data.Places[data.Places.length-1].CountryName}`;
     if (data.Places.length !== 0) {
       airportName = data.Places[data.Places.length - 1].PlaceId;
@@ -247,7 +246,7 @@ function findFlights(airportName) {
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-      "x-rapidapi-key": "13da362209msh7f0d9d06f77d4fep13c9d0jsnf99958022cd8"
+      "x-rapidapi-key": rapidAPIKey
     }
   }
   $.ajax(settings).done(function (response) {
@@ -262,7 +261,6 @@ function findFlights(airportName) {
 
 function flightInformation(flightQuery) {
   if (flightQuery.Carriers.length !== 0){
-    console.log(flightQuery);
     carrierArray = flightQuery.Carriers;
     destination = `${flightQuery.Places[1].Name}, ${flightQuery.Places[1].CountryName}`;
     destinationCity = flightQuery.Places[1].CityName;
@@ -289,7 +287,7 @@ function renderNoFlights(city, destinationCity) {
   const tdTryGoogleBtnText = document.createTextNode('Try Google?');
   tdTryGoogle.className = 'no-results';
   tdTryGoogleBtn.append(tdTryGoogleBtnText);
-  tdTryGoogleBtn.className = 'try-button';
+  tdTryGoogleBtn.className = 'submit-button';
   airportName = airportName.replace('-sky','');
   tdTryGoogleLink.appendChild(tdTryGoogleBtn);
   date = date.replace(/-/g, ' ')

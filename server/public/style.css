@@ -102,12 +102,16 @@ h1 {
   padding-left: 15px;
   padding-right: 15px;
   box-shadow: 2px 2px 2px rgb(46, 175, 222);
-  transition: .3s;
+  transition: .3s all ease-in-out;
 }
 
 .try-button {
   font-family: voster_typefaceregular;
   padding-top: 0;
+}
+
+.try-button:hover {
+  box-shadow: none;
 }
 .submit-button {
   font-size: 38px;
