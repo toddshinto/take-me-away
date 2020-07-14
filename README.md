@@ -38,8 +38,9 @@
 `npm install`
 #### 3. Rename `.env.example` to `.env` and insert your server key:
 `GOOGLE_API_KEY=AAAUUUGGGHHH1111`
-#### 4. Rename `server/public/browser-key-example.js` to `browser-key.js` and insert your browser key:
+#### 4. Rename `server/public/browser-key-example.js` to `browser-key.js` and insert your browser keys:
 `const browserKey=KKKKOOOOBBBBEEEE2222`
+`const rapidAPIKey=RRRRROOOOOCCCCKKKK3333`
 #### 5. Run the server
 `node index.js`
 #### 6. Visit localhost:3001 in browser
