@@ -38,7 +38,6 @@ const loadingScreen = document.getElementById('loading-screen');
 const titleContainer = document.getElementById('title-container');
 const resetButton = document.getElementById('reset-button');
 const landingPage = document.getElementById('landing-page');
-const getStarted = document.getElementById('get-started');
 const mainContainer = document.getElementById('main-container');
 const searchFailed = document.getElementById('search-failed-container');
 let distanceRatio;
@@ -70,23 +69,17 @@ toStart.addEventListener('click', toStartPage)
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
-getStarted.addEventListener('click', startPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
 
 function toStartPage() {
   instPage.classList.add('hidden');
-  landingPage.classList.remove('hidden')
+  mainContainer.classList.remove('hidden');
 }
 
 function tryAgainPage() {
   searchFailed.classList.add('hidden');
   mainContainer.classList.remove('hidden');
   resetPage();
-}
-
-function startPage() {
-  landingPage.classList.add('hidden');
-  mainContainer.classList.remove('hidden');
 }
 
 function resetPage() {
