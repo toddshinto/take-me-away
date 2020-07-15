@@ -193,7 +193,7 @@ tbody>tr>td {
 
 a, .try-google{
   color: white;
-  text-shadow: 1px 1px 1px white;
+  text-shadow: 1px 1px 1px rgb(46, 175, 222);
 }
 
 .try-google {
