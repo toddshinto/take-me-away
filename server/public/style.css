@@ -191,10 +191,16 @@ tbody>tr>td {
   text-align: center;
 }
 
-a {
+a, .try-google{
   color: white;
+  text-shadow: 1px 1px 1px white;
 }
-a:hover, .try-google {
+
+.try-google {
+  text-decoration: underline;
+}
+
+a:hover  {
   color: rgb(46, 175, 222);
   text-shadow: 1px 1px 1px white;
   text-decoration: none;
@@ -419,4 +425,5 @@ a:hover, .try-google {
 .clickable-cell:hover {
   color:  rgba(46, 175, 222, .78);
   background-color: white;
+  text-decoration: underline;
 }
