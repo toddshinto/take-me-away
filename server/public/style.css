@@ -1,6 +1,6 @@
 
 @font-face {
-    font-family: 'heritageregular';
+    font-family: 'heritage';
     src: url('assets/fonts/heritage_font-webfont.woff2') format('woff2'),
          url('assets/fonts/heritage_font-webfont.woff') format('woff');
     font-weight: normal;
@@ -9,7 +9,7 @@
 }
 
 @font-face {
-    font-family: 'voster_typefaceregular';
+    font-family: 'voster';
     src: url('assets/fonts/voster_font-webfont.woff2') format('woff2'),
          url('assets/fonts/voster_font-webfont.woff') format('woff');
     font-weight: normal;
@@ -17,7 +17,7 @@
 
 }
 h1 {
-  font-family: heritageregular;
+  font-family: heritage;
   font-size: 90px;
   color: white;
 }
@@ -35,7 +35,7 @@ h1 {
 }
 
 .city-input {
-  font-family: voster_typefaceregular;
+  font-family: voster;
   text-indent: 10px;
   border: none;
   background-color: rgba(255, 255, 255, 0.6);
@@ -51,7 +51,7 @@ h1 {
   background-color: rgba(255, 255, 255, .5)!important;
 }
 .distance {
-  font-family: voster_typefaceregular;
+  font-family: voster;
   text-indent: 10px;
   border: none;
   background-color: rgba(255, 255, 255, .9);
@@ -70,8 +70,8 @@ h1 {
   text-shadow: 1px 1px 1px white;
 }
 
-.date {
-  font-family: voster_typefaceregular;
+.date  {
+  font-family: voster;
   padding-left: 6px;
   border-radius: 5px;
   text-align: center;
@@ -83,8 +83,13 @@ h1 {
   font-size: 24px;
 }
 
+.failed-msg {
+  color: white;
+  text-shadow: 1px 1px 1px rgb(46, 175, 222);;
+}
+
 .submit-button, .reset-button, .get-started, .try-button {
-  font-family: heritageregular;
+  font-family: heritage;
   border: none;
   color: rgb(46, 175, 222);
   text-shadow: 2px 2px 2px white;
@@ -107,7 +112,7 @@ h1 {
 }
 
 .try-button {
-  font-family: voster_typefaceregular;
+  font-family: voster;
   padding-top: 0;
 }
 
@@ -168,7 +173,7 @@ body {
 
 th.th[scope="col"] {
   background-color: rgba(255, 255, 255, .6);
-  font-family: voster_typefaceregular;
+  font-family: voster;
   color: white;
   text-shadow: 1px 1px 1px rgb(46, 175, 222);
   font-size: 30px;
@@ -179,7 +184,7 @@ th.th[scope="col"] {
 tbody>tr>td {
   background-color: rgba(255, 255, 255, .3);
   color: white;
-  font-family: voster_typefaceregular;
+  font-family: voster;
   text-shadow: 1px 1px 1px rgb(46, 175, 222);
   border: 2px solid white;
   font-size: 24px;
@@ -189,7 +194,7 @@ tbody>tr>td {
 a {
   color: white;
 }
-a:hover {
+a:hover, .try-google {
   color: rgb(46, 175, 222);
   text-shadow: 1px 1px 1px white;
   text-decoration: none;
@@ -207,7 +212,15 @@ a:hover {
   width: 200px;
   stroke-dasharray: 425.59;
   stroke-dashoffset: 425.59;
-  animation: plane-loading-animation 3s linear infinite;
+  animation: plane-loading-animation 5s linear infinite;
+}
+
+@keyframes flying {
+  0% {
+  }
+  25.99% {
+    transform: scaleX(-1)
+  }
 }
 
 .loading-screen {
@@ -215,6 +228,10 @@ a:hover {
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.loading-screen-flying {
+  animation: flying 10s linear infinite;
 }
 
 @keyframes plane-loading-animation {
@@ -241,7 +258,7 @@ a:hover {
 }
 
 .landing-container, .search-failed-container {
-  font-family: voster_typefaceregular;
+  font-family: voster;
   color:rgba(46, 175, 222, .8);
   text-transform: uppercase;
   font-size:36px;
@@ -349,6 +366,20 @@ a:hover {
   100% {margin-top:-270px;}
 }
 
+.sky-notif {
+  font-size: 16px;
+  font-family: voster;
+  color: red;
+  position: absolute;
+  bottom: 5px;
+  text-align: center;
+  transition: all .4s ease-in-out;
+}
+
+.faded {
+  opacity: 0;
+}
+
 .no-results {
   display: flex;
   flex-direction: column;
@@ -366,7 +397,7 @@ a:hover {
   align-items: center;
 }
 .possible-distance {
-  font-family: voster_typefaceregular;
+  font-family: voster;
   color: rgba(46, 175, 222, 0.9);
   text-shadow: 1px 1px 1px white;
   position: absolute;

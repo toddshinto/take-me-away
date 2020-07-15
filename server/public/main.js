@@ -37,7 +37,6 @@ let input = document.getElementById('city-input');
 const loadingScreen = document.getElementById('loading-screen');
 const titleContainer = document.getElementById('title-container');
 const resetButton = document.getElementById('reset-button');
-const landingPage = document.getElementById('landing-page');
 const mainContainer = document.getElementById('main-container');
 const searchFailed = document.getElementById('search-failed-container');
 let distanceRatio;
@@ -45,7 +44,8 @@ const distanceWidth = document.getElementById('distance');
 const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
 const toStart = document.getElementById('to-start');
-const instPage = document.getElementById('instructions-page')
+const instPage = document.getElementById('instructions-page');
+const skyNotif = document.getElementById('sky-notif');
 
 //auto complete cities only
 let options = {
@@ -70,9 +70,16 @@ citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
+skyNotif.addEventListener('click', hideNotif);
+loadingScreen.addEventListener('click', flyPlane);
+
+function hideNotif() {
+  skyNotif.classList.add('faded')
+}
 
 function toStartPage() {
   instPage.classList.add('hidden');
+  skyNotif.classList.add('hidden')
   mainContainer.classList.remove('hidden');
 }
 
@@ -111,13 +118,21 @@ function urlify(city) {
   cityGeocode(city);
 }
 
+function flyPlane() {
+  if (loadingScreen.classList.contains('loading-screen-flying')) {
+    loadingScreen.classList.remove('loading-screen-flying')
+  } else {
+    loadingScreen.classList.add('loading-screen-flying')
+  }
+}
+
 //returns geocode information
 function cityGeocode(city) {
   $.ajax({
     url: `/api/geocode/${city}`,
     method: "GET",
     success: logSuccess,
-    fail: logError
+    error: logError
   })
 }
 
@@ -130,7 +145,6 @@ function logSuccess(data) {
   latitude = geocode.lat;
   longitude = geocode.lng;
   antipode(latitude, longitude);
-  // homeAirport(city1);
   findHomeAirport(latitude, longitude);
 }
 
@@ -155,8 +169,8 @@ function findHomeAirport(lat, lng) {
   homeAirportName = closest.name;
 }
 
-function logError(error) {
-  console.error(error)
+function logError() {
+  displaySearchFailed('Invalid city.')
 }
 
 function antipode(latitude, longitude) {
@@ -218,8 +232,7 @@ function findAirport(searchRequest) {
       const searchRequestArr = searchRequest.split('%20')
       findAirport(searchRequestArr[searchRequestArr.length-1])
     } else if (data.Places.length < 1 && typeof searchRequest !== 'string' ) {
-      loadingScreen.classList.add('hidden');
-      searchFailed.classList.remove('hidden');
+      displaySearchFailed('Sorry')
     }
     destinationCity = `${data.Places[data.Places.length-1].PlaceName}, ${data.Places[data.Places.length-1].CountryName}`;
     if (data.Places.length !== 0) {
@@ -227,6 +240,18 @@ function findAirport(searchRequest) {
     }
     checkEmpty(airportName);
   });
+}
+
+function displaySearchFailed(message) {
+  const msgContainer = document.createElement('div');
+  const msg = document.createTextNode(message);
+  const searchBox = document.getElementById('search-failed');
+  if (searchBox.childElementCount > 2) {searchBox.removeChild(searchBox.children[1])}
+  msgContainer.className='failed-msg';
+  msgContainer.append(msg);
+  searchBox.insertBefore(msgContainer, searchBox.childNodes[2]);
+  loadingScreen.classList.add('hidden');
+  searchFailed.classList.remove('hidden');
 }
 
 function checkEmpty(airportName) {
@@ -254,8 +279,7 @@ function findFlights(airportName) {
     flightInformation(flightQuery);
   })
     .fail(() => {
-      loadingScreen.classList.add('hidden');
-      searchFailed.classList.remove('hidden');
+      displaySearchFailed('Invalid route');
     });
 }
 
@@ -283,11 +307,11 @@ function renderNoFlights(city, destinationCity) {
   const tdTryGoogle = document.createElement('td');
   const tdTryGoogleLink = document.createElement('a');
   const tdTryGoogleTextNode = document.createTextNode('Skyscanner returned 0 results for flights from '+homeAirportName+ ' to '+destinationCity+'.');
-  const tdTryGoogleBtn = document.createElement('button');
-  const tdTryGoogleBtnText = document.createTextNode('Try Google?');
+  const tdTryGoogleBtn = document.createElement('span');
+  const tdTryGoogleBtnText = document.createTextNode('Google?');
   tdTryGoogle.className = 'no-results';
   tdTryGoogleBtn.append(tdTryGoogleBtnText);
-  tdTryGoogleBtn.className = 'submit-button';
+  tdTryGoogleBtn.className = 'try-google';
   airportName = airportName.replace('-sky','');
   tdTryGoogleLink.appendChild(tdTryGoogleBtn);
   date = date.replace(/-/g, ' ')
