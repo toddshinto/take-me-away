@@ -79,7 +79,6 @@ function hideNotif() {
 
 function toStartPage() {
   instPage.classList.add('hidden');
-  skyNotif.classList.add('hidden')
   mainContainer.classList.remove('hidden');
 }
 
@@ -173,6 +172,10 @@ function logError() {
   displaySearchFailed('Invalid city.')
 }
 
+function geoNamesFailure() {
+  displaySearchFailed('Search timed out.')
+}
+
 function antipode(latitude, longitude) {
   antiLat = latitude*(-1);
   if (longitude < 0) {
@@ -193,7 +196,7 @@ function geoNames(boundLat, boundLong, boundLat2, boundLong2) {
     url: `/api/geonames/${boundLat}/${boundLong}/${boundLat2}/${boundLong2}`,
     dataType: "json",
     success: geoNamesSuccess,
-    fail: logError
+    error: geoNamesFailure
   })
 }
 
