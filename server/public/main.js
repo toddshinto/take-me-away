@@ -361,7 +361,7 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   airportName = airportName.replace('-sky', '');
   date = date.replace(/\s/g, '');
   date = date.substring(2);
-  tdGoogleLink.href = `location.href=https://www.skyscanner.com/transport/flights/${homeAirportName}/${airportName}/${date} + "/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home`;
+  tdGoogleLink.href = `https://www.skyscanner.com/transport/flights/${homeAirportCode}/${airportName}/${date}/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home`;
   tdGoogleLink.target = "_blank";
   tdGoogle.append(tdGoogleLink);
   for (let i = 0; i < 4; i++) {
