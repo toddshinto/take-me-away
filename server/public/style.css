@@ -383,7 +383,8 @@ a:hover  {
 
 .notif-modal {
   position: absolute;
-  width: 320px;
+  width: 90vw;
+  max-width: 720px;
   top: 15%;
   left: 50%;
   transform: translateX(-50%);
