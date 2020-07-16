@@ -373,18 +373,33 @@ a:hover  {
 }
 
 .sky-notif {
-  font-size: 16px;
+  font-size: 20px;
   font-family: voster;
-  color: red;
-  position: absolute;
-  bottom: 5px;
-  text-align: center;
+  color: rgb(46, 175, 222);
   transition: all .4s ease-in-out;
   cursor: default;
+  text-align: center;
 }
 
-.faded {
-  opacity: 0;
+.notif-modal {
+  position: absolute;
+  width: 320px;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  border-radius: 15px;
+  z-index: 500;
+}
+
+.attn {
+  font-family: voster;
+  color: red;
 }
 
 .no-results {

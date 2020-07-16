@@ -45,7 +45,7 @@ const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
 const toStart = document.getElementById('to-start');
 const instPage = document.getElementById('instructions-page');
-const skyNotif = document.getElementById('sky-notif');
+const notifModal = document.getElementById('notif-modal');
 
 //auto complete cities only
 let options = {
@@ -70,11 +70,11 @@ citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
-skyNotif.addEventListener('click', hideNotif);
+notifModal.addEventListener('click', hideNotif);
 loadingScreen.addEventListener('click', flyPlane);
 
 function hideNotif() {
-  skyNotif.classList.add('faded')
+  notifModal.classList.add('hidden')
 }
 
 function toStartPage() {
