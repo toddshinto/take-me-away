@@ -68,6 +68,7 @@ const citySubmit = document.querySelector('form');
 toStart.addEventListener('click', toStartPage)
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
+document.getElementById('date').disabled = true;
 resetButton.addEventListener('click', resetPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
 notifModal.addEventListener('click', hideNotif);
@@ -270,7 +271,7 @@ function findFlights(airportName) {
   const settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportCode+"-sky/"+airportName+"/"+date,
+    "url": "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/"+homeAirportCode+"-sky/"+airportName+"/anytime",
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
