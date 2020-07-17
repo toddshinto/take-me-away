@@ -44,6 +44,7 @@ const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
 const toStart = document.getElementById('to-start');
 const instPage = document.getElementById('instructions-page');
+const skyMsg = document.querySelector('.sky-notification');
 
 //auto complete cities only
 let options = {
@@ -70,10 +71,15 @@ document.getElementById('date').value = today;
 resetButton.addEventListener('click', resetPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
 loadingScreen.addEventListener('click', flyPlane);
+document.getElementById('dismiss-button').addEventListener('click', dismiss);
 
 function toStartPage() {
   instPage.classList.add('hidden');
   mainContainer.classList.remove('hidden');
+}
+
+function dismiss() {
+  skyMsg.classList.add('hidden');
 }
 
 function tryAgainPage() {
@@ -382,6 +388,8 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote, d
     }
     if (i === 0) {
       dataEntry.textContent = dataCells[0][0].Name;
+    } else if (i === 3) {
+      dataEntry.textContent = dataCells[i]+'*';
     } else {
       dataEntry.textContent = dataCells[i];
     }
