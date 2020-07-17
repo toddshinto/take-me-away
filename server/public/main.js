@@ -60,6 +60,7 @@ document.body.appendChild(inputSrc);
 inputSrc.addEventListener('load', scriptLoaded, false)
 
 function scriptLoaded() {
+  // eslint-disable-next-line no-unused-vars
   var autocomplete = new google.maps.places.Autocomplete(input, options);
 }
 //submit event listener=>urlify=>get geo code
