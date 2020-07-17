@@ -19,7 +19,6 @@ let destinationCity;
 let minQuote;
 let distance;
 let city;
-let date;
 let lat1;
 let lat2;
 let lon1;
@@ -45,7 +44,6 @@ const distanceMiles = document.getElementById('distance-miles');
 const searchFailedButton = document.getElementById('search-failed-btn');
 const toStart = document.getElementById('to-start');
 const instPage = document.getElementById('instructions-page');
-const notifModal = document.getElementById('notif-modal');
 
 //auto complete cities only
 let options = {
@@ -69,15 +67,9 @@ const citySubmit = document.querySelector('form');
 toStart.addEventListener('click', toStartPage)
 citySubmit.addEventListener('submit', handleSubmit);
 document.getElementById('date').value = today;
-document.getElementById('date').disabled = true;
 resetButton.addEventListener('click', resetPage);
 searchFailedButton.addEventListener('click', tryAgainPage);
-notifModal.addEventListener('click', hideNotif);
 loadingScreen.addEventListener('click', flyPlane);
-
-function hideNotif() {
-  notifModal.classList.add('hidden')
-}
 
 function toStartPage() {
   instPage.classList.add('hidden');
@@ -104,7 +96,6 @@ function handleSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.target);
   city = formData.get('city-input');
-  date = formData.get('date');
   urlify(city);
   loadingScreen.classList.remove('hidden');
   titleContainer.classList.add('hidden');
@@ -281,6 +272,7 @@ function findFlights(airportName) {
   }
   $.ajax(settings).done(function (response) {
     flightQuery = response;
+    console.log(response);
     flightInformation(flightQuery);
   })
     .fail(() => {
@@ -298,7 +290,9 @@ function flightInformation(flightQuery) {
     } else {
       minQuote = "N/A";
     }
-    renderFlightRow(carrierArray, destination, destinationCity, minQuote);
+    departureDate = new Date(`${flightQuery.Quotes[0].OutboundLeg.DepartureDate}`);
+    const dateFormatted = `${departureDate.getMonth()}-${departureDate.getDate()}-${departureDate.getFullYear()}`;
+    renderFlightRow(carrierArray, destination, destinationCity, minQuote, dateFormatted);
   } else {
     renderNoFlights(city, destinationCity);
   }
@@ -319,8 +313,7 @@ function renderNoFlights(city, destinationCity) {
   tdTryGoogleBtn.className = 'try-google';
   airportName = airportName.replace('-sky','');
   tdTryGoogleLink.appendChild(tdTryGoogleBtn);
-  date = date.replace(/-/g, ' ')
-  tdTryGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity+" " + date;
+  tdTryGoogleLink.href = "https://www.google.com/search?q="+city+"+to+"+destinationCity;
   tdTryGoogleLink.target = "_blank";
   tdTryGoogle.append(tdTryGoogleTextNode);
   tdTryGoogle.append(tdTryGoogleLink);
@@ -340,14 +333,18 @@ function numberWithCommas(num) {
   return numParts.join('.');
 }
 
-function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
+function renderFlightRow(carrierArray, destination, destinationCity, minQuote, dateFormatted) {
   while (tbody.firstChild) {
     tbody.removeChild(tbody.lastChild);
   }
-  const dataCells = [carrierArray, destination, destinationCity, minQuote]
+  const dataCells = [carrierArray, destination, destinationCity, minQuote, dateFormatted]
   const buttonRow = document.createElement('tr');
   const fromRow = document.createElement('tr');
   const fromCell = document.createElement('td');
+  const dateSplit = dateFormatted.split('-');
+  dateSplit[2] = dateSplit[2].replace('20','');
+  if (dateSplit[0] < 10) {dateSplit[0]=`0${dateSplit[0]}`}
+  const searchDate = dateSplit[2]+dateSplit[0]+dateSplit[1];
   fromCell.setAttribute('colspan', 2);
   fromCell.textContent = `From ${homeAirportName}`
   fromRow.append(fromCell)
@@ -359,14 +356,11 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
   const tdGoogleLink = document.createElement('a');
   const tdGoogleLinkTextNode = document.createTextNode('Skyscanner');
   tdGoogleLink.appendChild(tdGoogleLinkTextNode);
-  date = date.replace(/-/g, ' ');
   airportName = airportName.replace('-sky', '');
-  date = date.replace(/\s/g, '');
-  date = date.substring(2);
-  tdGoogleLink.href = `https://www.skyscanner.com/transport/flights/${homeAirportCode}/${airportName}/${date}/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home`;
+  tdGoogleLink.href = `https://www.skyscanner.com/transport/flights/${homeAirportCode}/${airportName}/${searchDate}/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=0&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home`;
   tdGoogleLink.target = "_blank";
   tdGoogle.append(tdGoogleLink);
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     const row = document.createElement('tr');
     const title = document.createElement('td');
     const dataEntry = document.createElement('td');
@@ -382,6 +376,9 @@ function renderFlightRow(carrierArray, destination, destinationCity, minQuote) {
         break;
       case 3:
         title.textContent = 'Min Quote:'
+        break;
+      case 4:
+        title.textContent = 'Departure Date:'
         break;
     }
     if (i === 0) {
