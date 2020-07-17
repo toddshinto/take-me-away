@@ -14,8 +14,6 @@ app.get('/api/geocode/:city', (req, res) => {
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GOOGLE_API_KEY}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      console.log(data.results);
       if (data.results.length > 0) {
         return res.status(200).send(data);
       } else {

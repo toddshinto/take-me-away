@@ -272,7 +272,6 @@ function findFlights(airportName) {
   }
   $.ajax(settings).done(function (response) {
     flightQuery = response;
-    console.log(response);
     flightInformation(flightQuery);
   })
     .fail(() => {
@@ -291,7 +290,7 @@ function flightInformation(flightQuery) {
       minQuote = "N/A";
     }
     departureDate = new Date(`${flightQuery.Quotes[0].OutboundLeg.DepartureDate}`);
-    const dateFormatted = `${departureDate.getMonth()}-${departureDate.getDate()}-${departureDate.getFullYear()}`;
+    const dateFormatted = `${departureDate.getMonth()+1}-${departureDate.getDate()}-${departureDate.getFullYear()}`;
     renderFlightRow(carrierArray, destination, destinationCity, minQuote, dateFormatted);
   } else {
     renderNoFlights(city, destinationCity);
