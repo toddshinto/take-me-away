@@ -24,7 +24,7 @@ h1 {
 
 .table-container {
   flex-direction: column;
-  margin-top: 45px;
+  margin-top: 20px;
   align-items: center;
 }
 .reset-button-container {
@@ -180,6 +180,7 @@ body {
   background-image: url('assets/images/sky-bg.jpg');
   background-size: cover;
   background-position: bottom;
+  background-repeat: no-repeat;
   display: flex;
   width: 100%;
   justify-content: center;
