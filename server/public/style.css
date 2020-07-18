@@ -175,7 +175,8 @@ h1 {
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   background-image: url('assets/images/sky-bg.jpg');
   background-size: cover;
   background-position: bottom;
