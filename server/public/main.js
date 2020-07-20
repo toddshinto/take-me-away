@@ -85,6 +85,7 @@ function dismiss() {
 function tryAgainPage() {
   searchFailed.classList.add('hidden');
   mainContainer.classList.remove('hidden');
+  skyMsg.classList.remove('hidden');
   resetPage();
 }
 
@@ -95,6 +96,7 @@ function resetPage() {
   formContainer.classList.remove('hidden');
   tableContainer.classList.add('hidden');
   titleContainer.classList.remove('hidden');
+  skyMsg.classList.remove('hidden');
   document.getElementById('date').value = today;
 }
 
@@ -331,6 +333,7 @@ function renderNoFlights(city, destinationCity) {
   distanceWidth.setAttribute('style', "width: " + distanceRatio + "%");
   row.append(tdTryGoogle);
   tbody.append(row);
+  skyMsg.classList.add('hidden');
 }
 function numberWithCommas(num) {
   const numParts = num.toString().split('.');
